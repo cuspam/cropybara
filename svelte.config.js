@@ -1,7 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
-let basePath = '/';
+let basePath = '';
 
 // noinspection JSUnresolvedReference
 if (process.env.GITHUB_ACTIONS === 'true') {
