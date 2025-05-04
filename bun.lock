@@ -6,7 +6,7 @@
       "devDependencies": {
         "@eslint/compat": "^1.2.5",
         "@eslint/js": "^9.18.0",
-        "@fontsource-variable/roboto": "^5.2.5",
+        "@fontsource/pt-sans": "^5.2.5",
         "@inlang/paraglide-js": "^2.0.12",
         "@neoconfetti/svelte": "^2.0.0",
         "@sveltejs/adapter-static": "^3.0.8",
@@ -126,7 +126,7 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.2.8", "", { "dependencies": { "@eslint/core": "^0.13.0", "levn": "^0.4.1" } }, "sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA=="],
 
-    "@fontsource-variable/roboto": ["@fontsource-variable/roboto@5.2.5", "", {}, "sha512-csqBSOWXv0h5IbPhEqYJua6/nxl7dSNZbBOMeXSO9aqzgPw3GpfgC9kL5M6ULFLRaoDoBD4U9QctoDLKMaTyMg=="],
+    "@fontsource/pt-sans": ["@fontsource/pt-sans@5.2.5", "", {}, "sha512-bqJiRpuUwKjNjHWVI97dLLulL+8SdvfZqpNePKyZRooZ5RMeD5eIbW4F5DiQM/nR/WWlT6SL01sHOjbc51y+qQ=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 

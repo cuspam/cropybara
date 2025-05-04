@@ -11,6 +11,7 @@
 
 <style lang="scss">
   button {
+    font-family: inherit;
     display: inline-flex;
     border-radius: 0.25em;
     padding: 0.5em 1em;

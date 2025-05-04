@@ -1,4 +1,4 @@
-@use '@fontsource-variable/roboto/index.css';
+@use '@fontsource/pt-sans/index.css';
 
 :root {
   --color-background: #232429;
@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: 'Roboto Variable', sans-serif;
+  font-family: 'PT Sans', sans-serif;
   min-height: 100vh;
   margin: 0;
   background: var(--color-background);
