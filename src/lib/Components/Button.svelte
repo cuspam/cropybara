@@ -16,7 +16,7 @@
     border-radius: var(--input-border-radius);
     padding: var(--input-padding-vertical) var(--input-padding-horizontal);
     background: transparent;
-    font-size: 1rem;
+    font-size: 1em;
     font-weight: normal;
     color: var(--color-text);
     border: 1px solid var(--color-border);

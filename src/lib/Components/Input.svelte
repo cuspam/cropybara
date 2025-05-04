@@ -11,8 +11,8 @@
     font-family: inherit;
     border-radius: var(--input-border-radius);
     padding: var(--input-padding-vertical) var(--input-padding-horizontal);
-    background: rgba(0, 0, 0, 0.5);
-    font-size: 1rem;
+    background: var(--input-background);
+    font-size: 1em;
     font-weight: normal;
     color: var(--color-text);
     border: 1px solid var(--color-border);
