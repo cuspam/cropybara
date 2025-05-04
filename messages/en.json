@@ -5,5 +5,7 @@
   "Picker_ImagesPickerButton_Text": "Images",
   "Picker_DirectoryPickerButton_Text": "Folder",
   "Picker_ZipArchivePickerButton_Text": "ZIP archive",
-  "Picker_ClipboardPasteButton_Text": "Clipboard"
+  "Picker_ClipboardPasteButton_Text": "Clipboard",
+  "Picker_DragAndDropHandler_Text": "Drop files to upload",
+  "Picker_DragAndDropHandler_Label": "File drop zone"
 }

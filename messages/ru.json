@@ -5,5 +5,7 @@
   "Picker_ImagesPickerButton_Text": "Изображения",
   "Picker_DirectoryPickerButton_Text": "Папка",
   "Picker_ZipArchivePickerButton_Text": "ZIP архив",
-  "Picker_ClipboardPasteButton_Text": "Буфер обмена"
+  "Picker_ClipboardPasteButton_Text": "Буфер обмена",
+  "Picker_DragAndDropHandler_Text": "Отпусти файлы для загрузки",
+  "Picker_DragAndDropHandler_Label": "Область для загрузки файлов"
 }
