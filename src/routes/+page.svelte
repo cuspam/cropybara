@@ -11,6 +11,7 @@
   import DirectoryPickerButton from '$lib/Components/FilePicker/DirectoryPickerButton.svelte';
   import ZipArchivePickerButton from '$lib/Components/FilePicker/ZipArchivePickerButton.svelte';
   import ClipboardPasteButton from '$lib/Components/FilePicker/ClipboardPasteButton.svelte';
+  import ClipboardPasteHandler from '$lib/Components/FilePicker/ClipboardPasteHandler.svelte';
 
   let value = $state(16);
   let checked = $state(false);
@@ -55,5 +56,6 @@
     <DirectoryPickerButton onFiles={handleFiles} />
     <ZipArchivePickerButton onFiles={handleFiles} />
     <ClipboardPasteButton onFiles={handleFiles} />
+    <ClipboardPasteHandler onFiles={handleFiles} />
   </div>
 </section>
