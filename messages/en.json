@@ -4,5 +4,6 @@
   "test_english_btn": "English",
   "Picker_ImagesPickerButton_Text": "Images",
   "Picker_DirectoryPickerButton_Text": "Folder",
-  "Picker_ZipArchivePickerButton_Text": "ZIP archive"
+  "Picker_ZipArchivePickerButton_Text": "ZIP archive",
+  "Picker_ClipboardPasteButton_Text": "Clipboard"
 }
