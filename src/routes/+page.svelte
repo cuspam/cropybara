@@ -6,11 +6,12 @@
   import Checkbox from '$lib/Components/Checkbox.svelte';
   import LabeledCheckbox from '$lib/Components/LabeledCheckbox.svelte';
   import LabeledInput from '$lib/Components/LabeledInput.svelte';
+  import { LocalStorageStore } from '$lib/LocalStorageStore.svelte';
 
   let value = $state(16);
   let checked = $state(false);
   let checked2 = $state(false);
-  let linputValue = $state('');
+  let linput = new LocalStorageStore('test-input', '');
 </script>
 
 <section style={`font-size: ${value}px`}>
@@ -37,7 +38,7 @@
   </div>
 
   <div>
-    <LabeledInput bind:value={linputValue}>Some important input</LabeledInput>
-    <LabeledInput disabled bind:value={linputValue}>Some other input</LabeledInput>
+    <LabeledInput bind:value={linput.value}>Some important input</LabeledInput>
+    <LabeledInput disabled bind:value={linput.value}>Some other input</LabeledInput>
   </div>
 </section>
