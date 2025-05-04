@@ -7,6 +7,7 @@
   import LabeledCheckbox from '$lib/Components/LabeledCheckbox.svelte';
   import LabeledInput from '$lib/Components/LabeledInput.svelte';
   import { LocalStorageStore } from '$lib/LocalStorageStore.svelte';
+  import FileInput from '$lib/Components/FileInput.svelte';
 
   let value = $state(16);
   let checked = $state(false);
@@ -40,5 +41,9 @@
   <div>
     <LabeledInput bind:value={linput.value}>Some important input</LabeledInput>
     <LabeledInput disabled bind:value={linput.value}>Some other input</LabeledInput>
+  </div>
+
+  <div>
+    <label>Select files <FileInput onFiles={(e) => console.log('Files:', e)} /></label>
   </div>
 </section>
