@@ -13,8 +13,8 @@
   button {
     font-family: inherit;
     display: inline-flex;
-    border-radius: 0.25em;
-    padding: 0.5em 1em;
+    border-radius: var(--input-border-radius);
+    padding: var(--input-padding-vertical) var(--input-padding-horizontal);
     background: transparent;
     font-size: 1rem;
     font-weight: normal;
@@ -35,7 +35,12 @@
   }
 
   button:active:not(:disabled) {
-    background: rgba(0, 0, 0, 0.25);
-    border-color: var(--color-border-active);
+    background: rgba(0, 0, 0, 0.5);
+    border-color: var(--color-accent);
+  }
+
+  button:focus {
+    outline: none;
+    border-color: var(--color-accent);
   }
 </style>
