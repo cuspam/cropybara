@@ -20,10 +20,6 @@
   @use '../../style/mixins.scss';
 
   label {
-    display: flex;
-    align-items: center;
-    gap: 0.4em;
-
     @include mixins.button;
   }
 </style>
