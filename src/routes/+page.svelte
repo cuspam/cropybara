@@ -3,6 +3,8 @@
   import { m } from '$lib/paraglide/messages.js';
   import Input from '$lib/Components/Input.svelte';
   import Button from '$lib/Components/Button.svelte';
+
+  let value = $state(0);
 </script>
 
 <div>
@@ -12,6 +14,6 @@
 </div>
 
 <div>
-  <Input type="number" />
-  <Input type="text" disabled value="some value" />
+  <Input type="number" bind:value />
+  <Input type="text" disabled value={`Value: ${value}`} />
 </div>

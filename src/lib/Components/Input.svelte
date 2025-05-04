@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements';
 
-  const { ...rest }: HTMLInputAttributes = $props();
+  let { value = $bindable(), ...rest }: HTMLInputAttributes = $props();
 </script>
 
-<input {...rest} />
+<input bind:value {...rest} />
 
 <style lang="scss">
   input {
