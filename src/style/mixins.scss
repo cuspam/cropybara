@@ -1,0 +1,41 @@
+@mixin button {
+  font-family: inherit;
+  display: inline-flex;
+  border-radius: var(--input-border-radius);
+  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  background: transparent;
+  font-size: 1em;
+  font-weight: normal;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  user-select: none;
+
+  // Apply disabled styles if :disabled pseudo-class or .disabled class is present
+  &:disabled,
+  &.disabled {
+    border-color: var(--color-border-disabled);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  // Apply hover styles only if NOT disabled (neither :disabled nor .disabled)
+  &:hover:not(:disabled):not(.disabled) {
+    border-color: var(--color-border-focus);
+    color: var(--color-text-active);
+  }
+
+  // Apply active styles only if NOT disabled
+  &:active:not(:disabled):not(.disabled) {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: var(--color-accent);
+  }
+
+  // Apply focus styles only if NOT disabled
+  // Note: We keep :focus and :focus-within separate from hover/active
+  // The &:disabled, &.disabled rule above should override these if necessary
+  &:focus:not(:disabled):not(.disabled),
+  &:focus-within:not(:disabled):not(.disabled) {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+}
