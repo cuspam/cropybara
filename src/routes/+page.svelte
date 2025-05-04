@@ -5,10 +5,12 @@
   import Button from '$lib/Components/Button.svelte';
   import Checkbox from '$lib/Components/Checkbox.svelte';
   import LabeledCheckbox from '$lib/Components/LabeledCheckbox.svelte';
+  import LabeledInput from '$lib/Components/LabeledInput.svelte';
 
   let value = $state(16);
   let checked = $state(false);
   let checked2 = $state(false);
+  let linputValue = $state('');
 </script>
 
 <section style={`font-size: ${value}px`}>
@@ -32,5 +34,10 @@
   <div>
     <LabeledCheckbox bind:checked={checked2}>Important checkbox</LabeledCheckbox>
     <LabeledCheckbox disabled bind:checked={checked2}>Important checkbox</LabeledCheckbox>
+  </div>
+
+  <div>
+    <LabeledInput bind:value={linputValue}>Some important input</LabeledInput>
+    <LabeledInput disabled bind:value={linputValue}>Some other input</LabeledInput>
   </div>
 </section>
