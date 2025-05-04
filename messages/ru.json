@@ -2,5 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "test_russian_btn": "Русский",
   "test_english_btn": "Английский",
-  "Picker_ImagesPickerButton_Text": "Изображения"
+  "Picker_ImagesPickerButton_Text": "Изображения",
+  "Picker_DirectoryPickerButton_Text": "Папка"
 }

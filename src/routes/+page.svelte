@@ -8,11 +8,16 @@
   import LabeledInput from '$lib/Components/LabeledInput.svelte';
   import { LocalStorageStore } from '$lib/LocalStorageStore.svelte';
   import ImagesPickerButton from '$lib/Components/FilePicker/ImagesPickerButton.svelte';
+  import DirectoryPickerButton from '$lib/Components/FilePicker/DirectoryPickerButton.svelte';
 
   let value = $state(16);
   let checked = $state(false);
   let checked2 = $state(false);
   let linput = new LocalStorageStore('test-input', '');
+
+  function handleFiles(files: File[]) {
+    alert(files.map((f) => f.name).join(', '));
+  }
 </script>
 
 <section style={`font-size: ${value}px`}>
@@ -44,6 +49,7 @@
   </div>
 
   <div>
-    <ImagesPickerButton />
+    <ImagesPickerButton onFiles={handleFiles} />
+    <DirectoryPickerButton onFiles={handleFiles} />
   </div>
 </section>
