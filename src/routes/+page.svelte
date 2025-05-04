@@ -9,6 +9,7 @@
   import { LocalStorageStore } from '$lib/LocalStorageStore.svelte';
   import ImagesPickerButton from '$lib/Components/FilePicker/ImagesPickerButton.svelte';
   import DirectoryPickerButton from '$lib/Components/FilePicker/DirectoryPickerButton.svelte';
+  import ZipArchivePickerButton from '$lib/Components/FilePicker/ZipArchivePickerButton.svelte';
 
   let value = $state(16);
   let checked = $state(false);
@@ -51,5 +52,6 @@
   <div>
     <ImagesPickerButton onFiles={handleFiles} />
     <DirectoryPickerButton onFiles={handleFiles} />
+    <ZipArchivePickerButton onFiles={handleFiles} />
   </div>
 </section>

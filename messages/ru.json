@@ -3,5 +3,6 @@
   "test_russian_btn": "Русский",
   "test_english_btn": "Английский",
   "Picker_ImagesPickerButton_Text": "Изображения",
-  "Picker_DirectoryPickerButton_Text": "Папка"
+  "Picker_DirectoryPickerButton_Text": "Папка",
+  "Picker_ZipArchivePickerButton_Text": "ZIP архив"
 }
