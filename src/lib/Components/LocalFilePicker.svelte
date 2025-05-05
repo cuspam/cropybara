@@ -33,6 +33,7 @@
   div {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 0.5em;
     justify-content: center;
   }
