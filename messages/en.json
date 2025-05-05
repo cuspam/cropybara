@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "test_russian_btn": "Russian",
-  "test_english_btn": "English",
+  "LocaleSwitcher_Locale_ru": "Русская версия",
+  "LocaleSwitcher_Locale_en": "English version",
   "Picker_ImagesPickerButton_Text": "Images",
   "Picker_DirectoryPickerButton_Text": "Folder",
   "Picker_ZipArchivePickerButton_Text": "ZIP archive",
