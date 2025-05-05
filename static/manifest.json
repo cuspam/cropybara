@@ -3,6 +3,8 @@
   "name": "Cropybara — Webtoon Stitcher & Cropper",
   "start_url": "./?source=pwa",
   "display": "standalone",
+  "background_color": "#232429",
+  "theme_color": "#232429",
   "icons": [
     {
       "src": "images/icon-128px.png",
