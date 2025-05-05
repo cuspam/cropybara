@@ -41,6 +41,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Cropybara</title>
+</svelte:head>
+
 <section style={`font-size: ${value}px`}>
   <div>
     <Button onclick={() => setLocale('en')}>{m.test_english_btn()}</Button>
