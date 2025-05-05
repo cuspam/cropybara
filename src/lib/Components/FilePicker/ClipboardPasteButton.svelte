@@ -3,7 +3,9 @@
   import Button from '$lib/Components/Button.svelte';
   import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { browser } from '$app/environment';
+  import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
 
+  const progressBar = ProgressBarState.use();
   const { onFiles, ...rest }: LocalFilesPickerProps = $props();
   const isSupported = browser && 'clipboard' in navigator && 'read' in navigator.clipboard;
 
@@ -14,25 +16,39 @@
    * This function reads that raw image data from the clipboard.
    */
   async function pasteFromClipboard() {
+    const state = $state({ total: 1, ready: 0 });
+    const task = () => state;
+    progressBar.add(task);
+
     const clipboard = await navigator.clipboard.read();
+    state.total += clipboard.length;
 
     const files: File[] = [];
-    let i = 0;
-    for (const item of clipboard) {
-      const imageType = item.types.includes('image/png')
-        ? 'image/png'
-        : item.types.find((type) => type.startsWith('image/'));
-      if (!imageType) continue;
+    for (let i = 0; i < clipboard.length; i++) {
+      const item = clipboard[i];
 
-      const blob = await item.getType(imageType);
-      const ext = imageType.split('/').pop()!;
-      const file = new File([blob], `clipboard-${Date.now()}-${i++}.${ext}`, {
-        type: imageType,
-      });
-      files.push(file);
+      try {
+        const imageType = item.types.includes('image/png')
+          ? 'image/png'
+          : item.types.find((type) => type.startsWith('image/'));
+        if (!imageType) continue;
+
+        const blob = await item.getType(imageType);
+        const ext = imageType.split('/').pop()!;
+        const file = new File([blob], `clipboard-${Date.now()}-${i++}.${ext}`, {
+          type: imageType,
+        });
+        files.push(file);
+      } catch (err) {
+        console.error('Failed to process clipboard item:', 'item=', item, 'error=', err);
+      } finally {
+        state.ready++;
+      }
     }
+    state.ready++;
 
     onFiles(files);
+    progressBar.remove(task);
   }
 </script>
 
