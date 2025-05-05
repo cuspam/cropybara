@@ -7,5 +7,6 @@
   "Picker_ZipArchivePickerButton_Text": "ZIP archive",
   "Picker_ClipboardPasteButton_Text": "Clipboard",
   "Picker_DragAndDropHandler_Text": "Drop files to upload",
+  "Picker_DragAndDropHandler_Disabled": "Wait for previous files to finish uploading",
   "Picker_DragAndDropHandler_Label": "File drop zone"
 }

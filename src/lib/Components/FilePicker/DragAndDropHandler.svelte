@@ -31,6 +31,7 @@
   async function handleDrop(event: DragEvent) {
     event.preventDefault();
     handleDragLeave(event);
+    if (progressBar.display) return;
 
     const items = Array.from(event.dataTransfer?.items ?? []);
     if (items.length === 0) {
@@ -101,11 +102,14 @@
     }
   }
 
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
   async function* getFilesRecursivelyWithEntriesAPI(
     entry: FileSystemEntry,
     state: ProgressBarStateItem,
     parent = '',
   ): AsyncGenerator<File> {
+    await sleep(100);
     if (entry.isFile) {
       yield await new Promise<File>((resolve, reject) =>
         // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileEntry/file
@@ -149,6 +153,7 @@
     state: ProgressBarStateItem,
     parent = '',
   ): AsyncGenerator<File> {
+    await sleep(100);
     switch (entry.kind) {
       case 'file': {
         const file = await entry.getFile();
@@ -191,7 +196,9 @@
   ondrop={handleDrop}
   aria-label={m.Picker_DragAndDropHandler_Label()}
 >
-  {m.Picker_DragAndDropHandler_Text()}
+  {progressBar.display
+    ? m.Picker_DragAndDropHandler_Disabled()
+    : m.Picker_DragAndDropHandler_Text()}
 </section>
 
 <style lang="scss">

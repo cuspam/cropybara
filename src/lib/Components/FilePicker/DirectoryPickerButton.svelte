@@ -3,7 +3,9 @@
   import FileInputButton from '$lib/Components/FileInputButton.svelte';
   import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { browser } from '$app/environment';
+  import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
 
+  const progressBar = ProgressBarState.use();
   const isSupported = browser && 'webkitdirectory' in document.createElement('input');
   const { onFiles, ...rest }: LocalFilesPickerProps = $props();
 
@@ -25,6 +27,7 @@
     webkitdirectory
     accept="application/non-existing-mime-type"
     onFiles={handleFiles}
+    disabled={progressBar.display}
     {...rest}
   >
     <svg

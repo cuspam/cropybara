@@ -7,5 +7,6 @@
   "Picker_ZipArchivePickerButton_Text": "ZIP архив",
   "Picker_ClipboardPasteButton_Text": "Буфер обмена",
   "Picker_DragAndDropHandler_Text": "Отпусти файлы для загрузки",
+  "Picker_DragAndDropHandler_Disabled": "Дождитесь окончания загрузки файлов",
   "Picker_DragAndDropHandler_Label": "Область для загрузки файлов"
 }
