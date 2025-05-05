@@ -20,7 +20,8 @@
     const task = () => state;
     progressBar.add(task);
 
-    const clipboard = await navigator.clipboard.read();
+    // @TODO Show human readable error message if access to clipboard is denied
+    const clipboard = await navigator.clipboard.read().catch(() => []);
     state.total += clipboard.length;
 
     const files: File[] = [];
