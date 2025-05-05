@@ -27,3 +27,15 @@ body {
   color: var(--color-text);
   font-size: 16px;
 }
+
+a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--color-text);
+
+  &:hover,
+  &:focus {
+    color: var(--color-text-active);
+  }
+}
