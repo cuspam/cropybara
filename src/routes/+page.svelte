@@ -13,14 +13,31 @@
   import ClipboardPasteButton from '$lib/Components/FilePicker/ClipboardPasteButton.svelte';
   import ClipboardPasteHandler from '$lib/Components/FilePicker/ClipboardPasteHandler.svelte';
   import DragAndDropHandler from '$lib/Components/FilePicker/DragAndDropHandler.svelte';
+  import { ProgressBarState, type ProgressBarStateItem } from '$lib/States/ProgressBarState.svelte';
 
   let value = $state(16);
   let checked = $state(false);
   let checked2 = $state(false);
   let linput = new LocalStorageStore('test-input', '');
+  const progressBar = ProgressBarState.use();
 
   function handleFiles(files: File[]) {
     alert(files.map((f) => f.name).join(', '));
+  }
+
+  function displayProgressOfLongTask() {
+    const state: ProgressBarStateItem = $state({ total: 10, ready: 0 });
+    const task = () => state;
+
+    const intervalId = setInterval(() => {
+      state.ready++;
+      if (state.ready === state.total) {
+        clearInterval(intervalId);
+        progressBar.remove(task);
+      }
+    }, 500);
+
+    progressBar.add(task);
   }
 </script>
 
@@ -59,5 +76,9 @@
     <ClipboardPasteButton onFiles={handleFiles} />
     <ClipboardPasteHandler onFiles={handleFiles} />
     <DragAndDropHandler onFiles={handleFiles} />
+  </div>
+
+  <div>
+    <Button onclick={displayProgressOfLongTask}>Start long task</Button>
   </div>
 </section>
