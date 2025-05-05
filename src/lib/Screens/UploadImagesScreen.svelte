@@ -50,4 +50,11 @@
     gap: 1em;
     justify-content: center;
   }
+
+  @supports (height: 100dvh) {
+    /** vh unit computes the viewport size without factoring in the toolbar height */
+    main {
+      height: 100dvh;
+    }
+  }
 </style>
