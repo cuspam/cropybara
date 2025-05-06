@@ -23,7 +23,7 @@
 </script>
 
 {#if display}
-  <div style="width: {width}%" out:fade={{ duration: 200 }}></div>
+  <div style="transform: translateX({-100 + width}%)" out:fade={{ duration: 200 }}></div>
 {/if}
 
 <style lang="scss">
@@ -33,6 +33,7 @@
     top: 0;
     height: 0.25rem;
     background: var(--color-accent);
-    transition: width 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
+    width: 100%;
   }
 </style>
