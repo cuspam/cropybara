@@ -43,6 +43,21 @@ sw.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     const cache = await caches.open(CACHE);
 
+    if (event.request.method === 'POST' && url.pathname.endsWith('/share_target')) {
+      event.respondWith(
+        (async () => {
+          const formData = await event.request.formData();
+
+          const link = formData.get('link') || '';
+          const description = formData.get('description') || '';
+          const name = formData.get('name') || '';
+          const files = formData.get('files') || [];
+
+          return Response.json({ link, description, name, files });
+        })(),
+      );
+    }
+
     // `build`/`files` can always be served from the cache
     if (ASSETS.includes(url.pathname)) {
       const response = await cache.match(url.pathname);
