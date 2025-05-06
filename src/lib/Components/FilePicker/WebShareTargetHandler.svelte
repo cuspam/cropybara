@@ -32,7 +32,7 @@
         }
 
         onFiles(files);
-        await mediaCache.delete('web-share-target-files');
+        await caches.delete('web-share-target-files');
       }
     })();
   });
