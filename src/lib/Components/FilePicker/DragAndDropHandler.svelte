@@ -2,9 +2,11 @@
   import { m } from '$lib/paraglide/messages.js';
   import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { ProgressBarState, type ProgressBarStateItem } from '$lib/States/ProgressBarState.svelte';
+  import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
 
   const { onFiles }: LocalFilesPickerProps = $props();
   const progressBar = ProgressBarState.use();
+  const alerts = AlertsState.use();
   let displayDropZone = $state(false);
   let dragCounter = $state(0);
 
@@ -65,8 +67,8 @@
                   state,
                 );
               } else {
-                console.warn('Unknown item kind:', 'item=', item);
-                return null;
+                alerts.display(AlertsLevel.Error, m.Picker_DragAndDropHandler_UnknownEntryAPI());
+                return [];
               }
 
               for await (const file of generator) {
@@ -81,20 +83,23 @@
                 'error=',
                 err,
               );
-              return null;
+              alerts.display(
+                AlertsLevel.Error,
+                m.Picker_DragAndDropHandler_ErrorProcessingItem({
+                  error: err instanceof Error ? err.message : String(err),
+                }),
+              );
+              return [];
             }
           }),
       );
 
-      const files = result
-        .flat()
-        .filter((f) => !!f)
-        .sort((l, r) =>
-          l.name.localeCompare(r.name, undefined, {
-            numeric: true,
-            sensitivity: 'base',
-          }),
-        );
+      const files = result.flat().sort((l, r) =>
+        l.name.localeCompare(r.name, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        }),
+      );
 
       onFiles(files);
     } finally {
@@ -102,26 +107,36 @@
     }
   }
 
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
+  /**
+   * Recursively yield files from a given entry using the Entries API.
+   */
   async function* getFilesRecursivelyWithEntriesAPI(
     entry: FileSystemEntry,
     state: ProgressBarStateItem,
     parent = '',
   ): AsyncGenerator<File> {
-    await sleep(100);
     if (entry.isFile) {
-      yield await new Promise<File>((resolve, reject) =>
-        // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileEntry/file
-        entry.file((file) => {
-          resolve(
-            new File([file], parent + file.name, {
-              type: file.type,
-              lastModified: file.lastModified,
-            }),
-          );
-        }, reject),
-      );
+      try {
+        yield await new Promise<File>((resolve, reject) =>
+          // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileEntry/file
+          entry.file((file) => {
+            resolve(
+              new File([file], parent + file.name, {
+                type: file.type,
+                lastModified: file.lastModified,
+              }),
+            );
+          }, reject),
+        );
+      } catch (err) {
+        alerts.display(
+          AlertsLevel.Error,
+          m.Picker_DragAndDropHandler_ErrorWhileReadingFile({
+            name: entry.name,
+            error: err instanceof Error ? err.message : String(err),
+          }),
+        );
+      }
     } else if (entry.isDirectory) {
       // For FileSystemDirectoryEntry, create a reader.
       const reader = (entry as FileSystemDirectoryEntry).createReader();
@@ -148,19 +163,31 @@
     state.ready++; // Increment ready after entry is processed
   }
 
+  /**
+   * Recursively yield files from a given entry using the FileSystem API.
+   */
   async function* getFilesRecursivelyWithFileSystemAPI(
     entry: FileSystemFileHandle | FileSystemDirectoryHandle,
     state: ProgressBarStateItem,
     parent = '',
   ): AsyncGenerator<File> {
-    await sleep(100);
     switch (entry.kind) {
       case 'file': {
-        const file = await entry.getFile();
-        yield new File([file], parent + file.name, {
-          type: file.type,
-          lastModified: file.lastModified,
-        });
+        try {
+          const file = await entry.getFile();
+          yield new File([file], parent + file.name, {
+            type: file.type,
+            lastModified: file.lastModified,
+          });
+        } catch (err) {
+          alerts.display(
+            AlertsLevel.Error,
+            m.Picker_DragAndDropHandler_ErrorWhileReadingFile({
+              name: entry.name,
+              error: err instanceof Error ? err.message : String(err),
+            }),
+          );
+        }
         break;
       }
 
@@ -176,9 +203,13 @@
         break;
       }
 
-      default:
-        console.warn('Unknown entry kind:', 'entry=', entry);
-        return;
+      default: {
+        const unknownEntry = entry as unknown as FileSystemHandle;
+        alerts.display(
+          AlertsLevel.Error,
+          m.Picker_DragAndDropHandler_UnknownEntryKind({ name: unknownEntry.name }),
+        );
+      }
     }
 
     state.ready++; // Increment ready after entry is processed
