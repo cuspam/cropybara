@@ -3,14 +3,16 @@ import type {
   ZipArchiveReaderErrorEvent,
   ZipArchiveReaderEvent,
   ZipArchiveReaderFileEvent,
-} from '$lib/ZipArchiveReaderEvent';
+} from '$lib/ZipArchiveReader/ZipArchiveReaderEvent';
+import type { ZipArchiveReader } from '$lib/ZipArchiveReader/ZipArchiveReader';
 
-export class ZipArchiveReader {
-  public static async *read(
+export class AsyncZipArchiveReader implements ZipArchiveReader {
+  public async *read(
     archiveFile: File,
   ): AsyncGenerator<
     ZipArchiveReaderEvent | ZipArchiveReaderFileEvent | ZipArchiveReaderErrorEvent
   > {
+    // Lazy load jszip to avoid bundling it into the main bundle
     const { default: jszip } = await import('jszip');
     const archive = await jszip.loadAsync(archiveFile);
 

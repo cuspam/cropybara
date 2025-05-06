@@ -8,13 +8,21 @@
   import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { m } from '$lib/paraglide/messages.js';
   import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
-  import { ZipArchiveReader } from '$lib/ZipArchiveReader';
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
   import { FileTypes } from '$lib/FileTypes';
+  import { WorkerZipArchiveReader } from '$lib/ZipArchiveReader/WorkerZipArchiveReader';
+  import type {
+    ZipArchiveReaderErrorEvent,
+    ZipArchiveReaderEvent,
+    ZipArchiveReaderFileEvent,
+  } from '$lib/ZipArchiveReader/ZipArchiveReaderEvent';
+  import { AsyncZipArchiveReader } from '$lib/ZipArchiveReader/AsyncZipArchiveReader';
+  import pLimit from 'p-limit';
 
   const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
   const { onFiles, ...rest }: LocalFilesPickerProps = $props();
+  const queue = pLimit(navigator?.hardwareConcurrency ?? 4);
 
   function handleFiles(files: File[]) {
     if (files.length === 0) {
@@ -24,7 +32,7 @@
 
     const filesPromises = files.map(async (file) => {
       if (FileTypes.isZipArchive(file)) {
-        return extractZipArchive(file);
+        return queue(() => extractZipArchive(file));
       } else {
         return file;
       }
@@ -42,22 +50,31 @@
       });
   }
 
+  function isResultEvent(result: ZipArchiveReaderEvent): result is ZipArchiveReaderFileEvent {
+    return 'file' in result;
+  }
+
+  function isErrorEvent(result: ZipArchiveReaderEvent): result is ZipArchiveReaderErrorEvent {
+    return 'error' in result;
+  }
+
   async function extractZipArchive(file: File): Promise<File[]> {
     const state = $state({ total: 1, ready: 0 });
     const task = () => state;
     progressBar.add(task);
 
+    const reader =
+      typeof Worker === 'undefined' ? new AsyncZipArchiveReader() : new WorkerZipArchiveReader();
+
     try {
       const unzipped: File[] = [];
-      for await (const event of ZipArchiveReader.read(file)) {
+      for await (const event of reader.read(file)) {
         state.total = event.total + 1; // number of files in archive + 1 for the archive itself
         state.ready = event.ready;
 
-        if ('file' in event && event.file instanceof File) {
+        if (isResultEvent(event)) {
           unzipped.push(event.file);
-        }
-
-        if ('error' in event) {
+        } else if (isErrorEvent(event)) {
           alerts.display(
             AlertsLevel.Error,
             m.Picker_LocalFilePicker_ErrorUnzippingFile({
