@@ -42,10 +42,25 @@ sw.addEventListener('fetch', (event) => {
     event.respondWith(
       (async () => {
         const formData = await event.request.formData();
-        const image = formData.get('image');
-        const keys = await caches.keys();
-        const mediaCache = await caches.open(keys.filter((key) => key.startsWith('media'))[0]);
-        await mediaCache.put('shared-image', new Response(image));
+        await caches.delete('web-share-target-files');
+
+        const images = formData.getAll('image');
+        const mediaCache = await caches.open('web-share-target-files');
+
+        for (let i = 0; i < images.length; i++) {
+          const image = images[i];
+          if (typeof image === 'string') continue;
+          await mediaCache.put(
+            i.toString(),
+            new Response(image, {
+              headers: {
+                'Content-Type': image.type,
+                'X-Cropybara-Filename': image.name,
+              },
+            }),
+          );
+        }
+
         return Response.redirect('./?source=share-target', 303);
       })(),
     );
