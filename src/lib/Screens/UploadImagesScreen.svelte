@@ -1,10 +1,9 @@
 <script lang="ts">
   import LocalFilePicker from '$lib/Components/LocalFilePicker.svelte';
   import Footer from '$lib/Components/Footer.svelte';
+  import type { ImageFile } from '$lib/ImageFile';
 
-  function handleFiles(files: File[]) {
-    console.log(files);
-  }
+  const { onImages }: { onImages: (images: ImageFile[]) => void } = $props();
 </script>
 
 <svelte:head>
@@ -13,7 +12,7 @@
 
 <main>
   <div></div>
-  <LocalFilePicker onFiles={handleFiles} />
+  <LocalFilePicker {onImages} />
   <div class="footer">
     <Footer />
   </div>

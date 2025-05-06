@@ -23,5 +23,13 @@
   "Picker_LocalFilePicker_ErrorProcessingFiles": "Error processing files: {error}",
   "Picker_LocalFilePicker_ErrorInvalidFileType": "File \"{name}\" is not an image but {type}.",
   "Picker_LocalFilePicker_ErrorImageLoadingFailed": "Failed to read image \"{name}\": {error}",
-  "UploadImagesScreen_SourceCodeLink_Text": "Source code"
+  "UploadImagesScreen_SourceCodeLink_Text": "Source code",
+  "ConfigScreen_Header": "Settings",
+  "ConfigScreen_ProjectName_Label": "Project name",
+  "ConfigScreen_HeightLimit_Label": "Height limit",
+  "ConfigScreen_CancelButton_Text": "Cancel",
+  "ConfigScreen_SubmitButton_Text": "Process",
+  "ConfigScreen_ForceWithNotice_Checkbox_Label": "Resize all images to {width}px width",
+  "ConfigScreen_ForceWithNotice_Description": "Not all images have the same width! Most images ({length}) have a width of {width}px, however there are exceptions",
+  "ConfigScreen_ForceWithNotice_Exception": "{length} with width {width}px"
 }

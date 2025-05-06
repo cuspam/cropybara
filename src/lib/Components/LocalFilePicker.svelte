@@ -5,7 +5,6 @@
   import ZipArchivePickerButton from '$lib/Components/FilePicker/ZipArchivePickerButton.svelte';
   import ImagesPickerButton from '$lib/Components/FilePicker/ImagesPickerButton.svelte';
   import ClipboardPasteHandler from '$lib/Components/FilePicker/ClipboardPasteHandler.svelte';
-  import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { m } from '$lib/paraglide/messages.js';
   import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
@@ -22,8 +21,7 @@
 
   const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
-  const { onFiles, ...rest }: LocalFilesPickerProps & { onFiles: (images: ImageFile[]) => void } =
-    $props();
+  const { onImages }: { onImages: (images: ImageFile[]) => void } = $props();
   const queue = pLimit(navigator?.hardwareConcurrency ?? 4);
 
   async function handleFiles(files: File[]) {
@@ -90,7 +88,7 @@
             }),
           );
 
-          onFiles(imageFiles.filter((i) => !!i));
+          onImages(imageFiles.filter((i) => !!i));
         })
         .catch((error) => {
           alerts.display(
@@ -151,12 +149,12 @@
   <h1>{m.Picker_LocalFilePicker_Header()}</h1>
 
   <div>
-    <ImagesPickerButton onFiles={handleFiles} {...rest} />
-    <DirectoryPickerButton onFiles={handleFiles} {...rest} />
-    <ZipArchivePickerButton onFiles={handleFiles} {...rest} />
-    <ClipboardPasteButton onFiles={handleFiles} {...rest} />
-    <ClipboardPasteHandler onFiles={handleFiles} {...rest} />
-    <DragAndDropHandler onFiles={handleFiles} {...rest} />
+    <ImagesPickerButton onFiles={handleFiles} />
+    <DirectoryPickerButton onFiles={handleFiles} />
+    <ZipArchivePickerButton onFiles={handleFiles} />
+    <ClipboardPasteButton onFiles={handleFiles} />
+    <ClipboardPasteHandler onFiles={handleFiles} />
+    <DragAndDropHandler onFiles={handleFiles} />
   </div>
 </section>
 
