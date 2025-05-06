@@ -22,5 +22,6 @@
   "Picker_LocalFilePicker_ErrorUnzippingFile": "Ошибка при распаковке файла \"{name}\": {error}",
   "Picker_LocalFilePicker_ErrorProcessingFiles": "Ошибка обработки файлов: {error}",
   "Picker_LocalFilePicker_ErrorInvalidFileType": "Файл \"{name}\" это не изображение, а {type}.",
+  "Picker_LocalFilePicker_ErrorImageLoadingFailed": "Не удалось прочитать изображение \"{name}\": {error}",
   "UploadImagesScreen_SourceCodeLink_Text": "Исходный код"
 }

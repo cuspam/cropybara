@@ -18,59 +18,91 @@
   } from '$lib/ZipArchiveReader/ZipArchiveReaderEvent';
   import { AsyncZipArchiveReader } from '$lib/ZipArchiveReader/AsyncZipArchiveReader';
   import pLimit from 'p-limit';
+  import { ImageFile } from '$lib/ImageFile';
 
   const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
-  const { onFiles, ...rest }: LocalFilesPickerProps = $props();
+  const { onFiles, ...rest }: LocalFilesPickerProps & { onFiles: (images: ImageFile[]) => void } =
+    $props();
   const queue = pLimit(navigator?.hardwareConcurrency ?? 4);
 
-  function handleFiles(files: File[]) {
+  async function handleFiles(files: File[]) {
     if (files.length === 0) {
       alerts.display(AlertsLevel.Warning, m.Picker_LocalFilePicker_NoFilesSelected());
       return;
     }
 
-    const filesPromises = files.map(async (file) => {
-      if (FileTypes.isZipArchive(file)) {
-        return queue(() => extractZipArchive(file));
-      } else {
-        return file;
-      }
-    });
+    const state = $state({ total: 1, ready: 0 });
+    const task = () => state;
+    progressBar.add(task);
 
-    Promise.all(filesPromises)
-      .then((results) => {
-        const images = results.flat().filter((file) => {
-          if (file.name.startsWith('.') || file.name.includes('/.')) {
-            // Ignore hidden files and files in hidden directories
-            return false;
-          }
-
-          if (!file.type.startsWith('image/')) {
-            // Ignore non-image files
-            alerts.display(
-              AlertsLevel.Error,
-              m.Picker_LocalFilePicker_ErrorInvalidFileType({
-                name: file.name,
-                type: file.type,
-              }),
-            );
-            return false;
-          }
-
-          return true;
-        });
-
-        onFiles(images);
-      })
-      .catch((error) => {
-        alerts.display(
-          AlertsLevel.Error,
-          m.Picker_LocalFilePicker_ErrorProcessingFiles({
-            error: error instanceof Error ? error.message : String(error),
-          }),
-        );
+    try {
+      const filesPromises = files.map(async (file) => {
+        if (FileTypes.isZipArchive(file)) {
+          return queue(() => extractZipArchive(file));
+        } else {
+          return file;
+        }
       });
+
+      Promise.all(filesPromises)
+        .then(async (results) => {
+          const images = results.flat().filter((file) => {
+            if (file.name.startsWith('.') || file.name.includes('/.')) {
+              // Ignore hidden files and files in hidden directories
+              return false;
+            }
+
+            if (!file.type.startsWith('image/')) {
+              // Ignore non-image files
+              alerts.display(
+                AlertsLevel.Error,
+                m.Picker_LocalFilePicker_ErrorInvalidFileType({
+                  name: file.name,
+                  type: file.type,
+                }),
+              );
+              return false;
+            }
+
+            return true;
+          });
+
+          state.total = images.length;
+
+          const imageFiles = await Promise.all(
+            images.map(async (file) => {
+              try {
+                const image = await ImageFile.fromFile(file);
+                return image;
+              } catch (err) {
+                alerts.display(
+                  AlertsLevel.Error,
+                  m.Picker_LocalFilePicker_ErrorImageLoadingFailed({
+                    name: file.name,
+                    error: err instanceof Error ? err.message : String(err),
+                  }),
+                );
+                return null;
+              } finally {
+                state.ready++;
+              }
+            }),
+          );
+
+          onFiles(imageFiles.filter((i) => !!i));
+        })
+        .catch((error) => {
+          alerts.display(
+            AlertsLevel.Error,
+            m.Picker_LocalFilePicker_ErrorProcessingFiles({
+              error: error instanceof Error ? error.message : String(error),
+            }),
+          );
+        });
+    } finally {
+      progressBar.remove(task);
+    }
   }
 
   function isResultEvent(result: ZipArchiveReaderEvent): result is ZipArchiveReaderFileEvent {
