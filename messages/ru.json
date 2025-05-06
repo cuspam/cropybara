@@ -21,5 +21,6 @@
   "Picker_LocalFilePicker_NoFilesSelected": "Файлы не были выбраны.",
   "Picker_LocalFilePicker_ErrorUnzippingFile": "Ошибка при распаковке файла \"{name}\": {error}",
   "Picker_LocalFilePicker_ErrorProcessingFiles": "Ошибка обработки файлов: {error}",
+  "Picker_LocalFilePicker_ErrorInvalidFileType": "Файл \"{name}\" это не изображение, а {type}.",
   "UploadImagesScreen_SourceCodeLink_Text": "Исходный код"
 }

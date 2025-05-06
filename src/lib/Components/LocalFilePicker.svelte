@@ -39,7 +39,30 @@
     });
 
     Promise.all(filesPromises)
-      .then((files) => onFiles(files.flat()))
+      .then((results) => {
+        const images = results.flat().filter((file) => {
+          if (file.name.startsWith('.') || file.name.includes('/.')) {
+            // Ignore hidden files and files in hidden directories
+            return false;
+          }
+
+          if (!file.type.startsWith('image/')) {
+            // Ignore non-image files
+            alerts.display(
+              AlertsLevel.Error,
+              m.Picker_LocalFilePicker_ErrorInvalidFileType({
+                name: file.name,
+                type: file.type,
+              }),
+            );
+            return false;
+          }
+
+          return true;
+        });
+
+        onFiles(images);
+      })
       .catch((error) => {
         alerts.display(
           AlertsLevel.Error,
