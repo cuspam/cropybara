@@ -31,7 +31,8 @@
         {
           "name": "image",
           "accept": [
-            "image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"
+            ".zip", ".jpg", ".jpeg", ".jfif", ".png", ".webp", ".avif", ".gif",
+            "application/zip", "image/jpeg", "image/png", "image/webp", "image/avif", "image/gif"
           ]
         }
       ]
