@@ -19,5 +19,7 @@
   "Picker_DragAndDropHandler_ErrorProcessingItem": "Error processing dropped item: {error}",
   "Picker_LocalFilePicker_Header": "Select images",
   "Picker_LocalFilePicker_NoFilesSelected": "No files were selected.",
+  "Picker_LocalFilePicker_ErrorUnzippingFile": "Error unzipping file \"{name}\": {error}",
+  "Picker_LocalFilePicker_ErrorProcessingFiles": "Error processing files: {error}",
   "UploadImagesScreen_SourceCodeLink_Text": "Source code"
 }

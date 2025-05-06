@@ -19,5 +19,7 @@
   "Picker_DragAndDropHandler_ErrorProcessingItem": "Ошибка обработки перетащенного элемента: {error}",
   "Picker_LocalFilePicker_Header": "Выбор изображений",
   "Picker_LocalFilePicker_NoFilesSelected": "Файлы не были выбраны.",
+  "Picker_LocalFilePicker_ErrorUnzippingFile": "Ошибка при распаковке файла \"{name}\": {error}",
+  "Picker_LocalFilePicker_ErrorProcessingFiles": "Ошибка обработки файлов: {error}",
   "UploadImagesScreen_SourceCodeLink_Text": "Исходный код"
 }
