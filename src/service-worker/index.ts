@@ -47,13 +47,11 @@ sw.addEventListener('fetch', (event) => {
       event.respondWith(
         (async () => {
           const formData = await event.request.formData();
-
-          const link = formData.get('link') || '';
-          const description = formData.get('description') || '';
-          const name = formData.get('name') || '';
-          const files = formData.get('files') || [];
-
-          return Response.json({ link, description, name, files });
+          const image = formData.get('image');
+          const keys = await caches.keys();
+          const mediaCache = await caches.open(keys.filter((key) => key.startsWith('media'))[0]);
+          await mediaCache.put('shared-image', new Response(image));
+          return Response.redirect('./?source=share-target', 303);
         })(),
       );
     }
