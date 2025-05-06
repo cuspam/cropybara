@@ -12,6 +12,9 @@ export default defineConfig({
       strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
     }),
   ],
+  worker: {
+    format: 'es',
+  },
   test: {
     workspace: [
       {
