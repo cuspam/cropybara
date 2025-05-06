@@ -4,7 +4,9 @@
   import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { browser } from '$app/environment';
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
+  import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
 
+  const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
   const { onFiles, ...rest }: LocalFilesPickerProps = $props();
   const isSupported = browser && 'clipboard' in navigator && 'read' in navigator.clipboard;
@@ -18,38 +20,64 @@
   async function pasteFromClipboard() {
     const state = $state({ total: 1, ready: 0 });
     const task = () => state;
-    progressBar.add(task);
 
-    // @TODO Show human readable error message if access to clipboard is denied
-    const clipboard = await navigator.clipboard.read().catch(() => []);
-    state.total += clipboard.length;
+    try {
+      const clipboard = await navigator.clipboard.read();
+      state.total += clipboard.length;
+      progressBar.add(task);
 
-    const files: File[] = [];
-    for (let i = 0; i < clipboard.length; i++) {
-      const item = clipboard[i];
+      const files: File[] = [];
+      for (let i = 0; i < clipboard.length; i++) {
+        const item = clipboard[i];
 
-      try {
-        const imageType = item.types.includes('image/png')
-          ? 'image/png'
-          : item.types.find((type) => type.startsWith('image/'));
-        if (!imageType) continue;
+        try {
+          const imageType = item.types.includes('image/png')
+            ? 'image/png'
+            : item.types.find((type) => type.startsWith('image/'));
+          if (!imageType) continue;
 
-        const blob = await item.getType(imageType);
-        const ext = imageType.split('/').pop()!;
-        const file = new File([blob], `clipboard-${Date.now()}-${i++}.${ext}`, {
-          type: imageType,
-        });
-        files.push(file);
-      } catch (err) {
-        console.error('Failed to process clipboard item:', 'item=', item, 'error=', err);
-      } finally {
-        state.ready++;
+          const blob = await item.getType(imageType);
+          const ext = imageType.split('/').pop()!;
+          const file = new File([blob], `clipboard-${Date.now()}-${i++}.${ext}`, {
+            type: imageType,
+          });
+          files.push(file);
+        } catch (err) {
+          console.error('Failed to process clipboard item:', 'item=', item, 'error=', err);
+          alerts.display(
+            AlertsLevel.Error,
+            m.Picker_ClipboardPasteButton_FailedToProcessClipboardItem({
+              error: err instanceof Error ? err.message : String(err),
+              index: i + 1,
+            }),
+          );
+        } finally {
+          state.ready++;
+        }
       }
-    }
-    state.ready++;
+      state.ready++;
 
-    onFiles(files);
-    progressBar.remove(task);
+      if (files.length === 0) {
+        alerts.display(AlertsLevel.Warning, m.Picker_ClipboardPasteButton_NoImagesFound());
+        return;
+      }
+
+      onFiles(files);
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
+        alerts.display(AlertsLevel.Error, m.Picker_ClipboardPasteButton_NotAllowedError());
+      } else {
+        console.error('Failed to read clipboard:', 'error=', err);
+        alerts.display(
+          AlertsLevel.Error,
+          m.Picker_ClipboardPasteButton_Error({
+            error: err instanceof Error ? err.message : String(err),
+          }),
+        );
+      }
+    } finally {
+      progressBar.remove(task);
+    }
   }
 </script>
 
