@@ -36,25 +36,26 @@ sw.addEventListener('activate', (event) => {
 });
 
 sw.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  if (event.request.method === 'POST' && url.pathname.endsWith('/share_target')) {
+    event.respondWith(
+      (async () => {
+        const formData = await event.request.formData();
+        const image = formData.get('image');
+        const keys = await caches.keys();
+        const mediaCache = await caches.open(keys.filter((key) => key.startsWith('media'))[0]);
+        await mediaCache.put('shared-image', new Response(image));
+        return Response.redirect('./?source=share-target', 303);
+      })(),
+    );
+  }
+
   // ignore POST requests etc
   if (event.request.method !== 'GET') return;
 
   async function respond() {
-    const url = new URL(event.request.url);
     const cache = await caches.open(CACHE);
-
-    if (event.request.method === 'POST' && url.pathname.endsWith('/share_target')) {
-      event.respondWith(
-        (async () => {
-          const formData = await event.request.formData();
-          const image = formData.get('image');
-          const keys = await caches.keys();
-          const mediaCache = await caches.open(keys.filter((key) => key.startsWith('media'))[0]);
-          await mediaCache.put('shared-image', new Response(image));
-          return Response.redirect('./?source=share-target', 303);
-        })(),
-      );
-    }
 
     // `build`/`files` can always be served from the cache
     if (ASSETS.includes(url.pathname)) {
