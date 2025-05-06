@@ -18,6 +18,7 @@
   import { AsyncZipArchiveReader } from '$lib/ZipArchiveReader/AsyncZipArchiveReader';
   import pLimit from 'p-limit';
   import { ImageFile } from '$lib/ImageFile';
+  import WebShareTargetHandler from '$lib/Components/FilePicker/WebShareTargetHandler.svelte';
 
   const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
@@ -155,6 +156,7 @@
     <ClipboardPasteButton onFiles={handleFiles} />
     <ClipboardPasteHandler onFiles={handleFiles} />
     <DragAndDropHandler onFiles={handleFiles} />
+    <WebShareTargetHandler onFiles={handleFiles} />
   </div>
 </section>
 
