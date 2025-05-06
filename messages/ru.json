@@ -18,5 +18,6 @@
   "Picker_DragAndDropHandler_UnknownEntryAPI": "Ошибка обработки перетащенного элемента: Неподдерживаемый API браузера.",
   "Picker_DragAndDropHandler_ErrorProcessingItem": "Ошибка обработки перетащенного элемента: {error}",
   "Picker_LocalFilePicker_Header": "Выбор изображений",
+  "Picker_LocalFilePicker_NoFilesSelected": "Файлы не были выбраны.",
   "UploadImagesScreen_SourceCodeLink_Text": "Исходный код"
 }

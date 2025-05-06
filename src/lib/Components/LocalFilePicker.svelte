@@ -7,20 +7,31 @@
   import ClipboardPasteHandler from '$lib/Components/FilePicker/ClipboardPasteHandler.svelte';
   import type { LocalFilesPickerProps } from '$lib/LocalFilesPickerProps';
   import { m } from '$lib/paraglide/messages.js';
+  import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
 
-  const { ...rest }: LocalFilesPickerProps = $props();
+  const alerts = AlertsState.use();
+  const { onFiles, ...rest }: LocalFilesPickerProps = $props();
+
+  function handleFiles(files: File[]) {
+    if (files.length === 0) {
+      alerts.display(AlertsLevel.Warning, m.Picker_LocalFilePicker_NoFilesSelected());
+      return;
+    }
+
+    onFiles(files);
+  }
 </script>
 
 <section>
   <h1>{m.Picker_LocalFilePicker_Header()}</h1>
 
   <div>
-    <ImagesPickerButton {...rest} />
-    <DirectoryPickerButton {...rest} />
-    <ZipArchivePickerButton {...rest} />
-    <ClipboardPasteButton {...rest} />
-    <ClipboardPasteHandler {...rest} />
-    <DragAndDropHandler {...rest} />
+    <ImagesPickerButton onFiles={handleFiles} {...rest} />
+    <DirectoryPickerButton onFiles={handleFiles} {...rest} />
+    <ZipArchivePickerButton onFiles={handleFiles} {...rest} />
+    <ClipboardPasteButton onFiles={handleFiles} {...rest} />
+    <ClipboardPasteHandler onFiles={handleFiles} {...rest} />
+    <DragAndDropHandler onFiles={handleFiles} {...rest} />
   </div>
 </section>
 
