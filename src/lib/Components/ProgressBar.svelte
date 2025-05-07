@@ -35,5 +35,6 @@
     background: var(--color-accent);
     transition: 0.2s ease-in-out;
     width: 100%;
+    z-index: 99999999;
   }
 </style>
