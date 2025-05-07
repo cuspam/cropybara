@@ -30,28 +30,34 @@
   }
 
   async function handleConfig(cfg: { name: string; limit: number }) {
-    config = cfg;
+    const outliers = images.filter((image) => image.width !== widths[0][0]);
 
-    const resizer = new AsyncImageResizer();
-    const controller = new AbortController();
+    if (outliers.length > 0) {
+      // @TODO Update UI
+      const resizer = new AsyncImageResizer();
+      const controller = new AbortController();
 
-    const state = $state({ total: images.length, ready: 0 });
-    const task = () => state;
-    progressBar.add(task);
+      const state = $state({ total: outliers.length, ready: 0 });
+      const task = () => state;
+      progressBar.add(task);
 
-    try {
-      await Promise.all(
-        images.map(async (image) => {
-          try {
-            return await resizer.resize(image, 2000, controller.signal);
-          } finally {
-            state.ready++;
-          }
-        }),
-      );
-    } finally {
-      progressBar.remove(task);
+      try {
+        await Promise.all(
+          outliers.map(async (image) => {
+            try {
+              const index = images.indexOf(image);
+              images[index] = await resizer.resize(image, widths[0][0], controller.signal);
+            } finally {
+              state.ready++;
+            }
+          }),
+        );
+      } finally {
+        progressBar.remove(task);
+      }
     }
+
+    config = cfg;
   }
 </script>
 
