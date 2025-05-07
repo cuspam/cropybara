@@ -27,6 +27,7 @@
 
   function handleCancel() {
     images = [];
+    config = null;
   }
 
   async function handleConfig(cfg: { name: string; limit: number }) {
@@ -58,6 +59,10 @@
 
     config = cfg;
   }
+
+  function handleCuts(cuts: ReadonlyArray<number>) {
+    console.log('Cuts:', cuts);
+  }
 </script>
 
 {#if images.length === 0}
@@ -65,5 +70,5 @@
 {:else if !config}
   <ConfigScreen {widths} onCancel={handleCancel} onSubmit={handleConfig} />
 {:else}
-  <EditorScreen {images} limit={config.limit} />
+  <EditorScreen {images} limit={config.limit} onCancel={handleCancel} onSubmit={handleCuts} />
 {/if}
