@@ -33,7 +33,6 @@
     const outliers = images.filter((image) => image.width !== widths[0][0]);
 
     if (outliers.length > 0) {
-      // @TODO Update UI
       const resizer = new AsyncImageResizer();
       const controller = new AbortController();
 

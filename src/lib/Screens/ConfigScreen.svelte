@@ -3,6 +3,7 @@
   import LabeledInput from '$lib/Components/LabeledInput.svelte';
   import Button from '$lib/Components/Button.svelte';
   import LabeledCheckbox from '$lib/Components/LabeledCheckbox.svelte';
+  import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
 
   type Props = {
     widths: Array<[number, string[]]>;
@@ -11,6 +12,7 @@
   };
 
   const { onCancel, onSubmit, widths }: Props = $props();
+  const progressBar = ProgressBarState.use();
   let name = $state(`cropybara-${Math.round(Date.now() / 1000)}`);
   let limit = $state(20_000);
   let forceWidth = $state(false);
@@ -55,10 +57,12 @@
     {/if}
 
     <div class="controls">
-      <Button type="submit" disabled={!(widths.length === 1 || forceWidth)}
+      <Button type="submit" disabled={!(widths.length === 1 || forceWidth) || progressBar.display}
         >{m.ConfigScreen_SubmitButton_Text()}</Button
       >
-      <Button type="reset">{m.ConfigScreen_CancelButton_Text()}</Button>
+      <Button type="reset" disabled={progressBar.display}
+        >{m.ConfigScreen_CancelButton_Text()}</Button
+      >
     </div>
   </form>
 </main>
