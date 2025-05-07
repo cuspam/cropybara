@@ -5,10 +5,18 @@
   import EditorScreen from '$lib/Screens/EditorScreen.svelte';
   import { AsyncImageResizer } from '$lib/ImageResizer/AsyncImageResizer';
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
+  import type { ImagesSaver } from '$lib/ImageSaver/ImagesSaver';
+  import { SteamsaverImageSaver } from '$lib/ImageSaver/SteamsaverImageSaver';
+  import { CanvasChef } from '$lib/Chef/CanvasChef';
+  import type { Chef } from '$lib/Chef/Chef';
+  import { CarvingKnife } from '$lib/CarvingKnife/CarvingKnife';
+  import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
+  import { m } from '$lib/paraglide/messages.js';
 
   let images: ImageFile[] = $state([]);
   let config: { name: string; limit: number } | null = $state(null);
   const progressBar = ProgressBarState.use();
+  const alerts = AlertsState.use();
 
   let widths = $derived(
     Object.entries(
@@ -60,8 +68,38 @@
     config = cfg;
   }
 
-  function handleCuts(cuts: ReadonlyArray<number>) {
-    console.log('Cuts:', cuts);
+  async function handleCuts(cuts: ReadonlyArray<number>) {
+    if (!config) return;
+    const saver: ImagesSaver = new SteamsaverImageSaver();
+
+    let task = $state({ total: cuts.length + 1, ready: 0 });
+    const getter = () => task;
+    progressBar.add(getter);
+
+    try {
+      const chef: Chef = new CanvasChef();
+
+      const controller = new AbortController();
+      const slices = CarvingKnife.cut(images, cuts);
+
+      performance.mark('slicingStart');
+
+      await saver.save(config.name, chef.process(slices, controller.signal), () => {
+        task.ready += 1;
+        console.log('Progress:', task.ready, '/', task.total);
+      });
+
+      performance.mark('slicingFinish');
+      const slicingMeasure = performance.measure(
+        'slicingDuration',
+        'slicingStart',
+        'slicingFinish',
+      );
+      console.debug(slicingMeasure.duration);
+      alerts.display(AlertsLevel.Success, m.Done());
+    } finally {
+      progressBar.remove(getter);
+    }
   }
 </script>
 
