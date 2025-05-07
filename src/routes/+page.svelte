@@ -3,9 +3,12 @@
   import type { ImageFile } from '$lib/ImageFile';
   import ConfigScreen from '$lib/Screens/ConfigScreen.svelte';
   import EditorScreen from '$lib/Screens/EditorScreen.svelte';
+  import { AsyncImageResizer } from '$lib/ImageResizer/AsyncImageResizer';
+  import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
 
   let images: ImageFile[] = $state([]);
   let config: { name: string; limit: number } | null = $state(null);
+  const progressBar = ProgressBarState.use();
 
   let widths = $derived(
     Object.entries(
@@ -26,8 +29,29 @@
     images = [];
   }
 
-  function handleConfig(cfg: { name: string; limit: number }) {
+  async function handleConfig(cfg: { name: string; limit: number }) {
     config = cfg;
+
+    const resizer = new AsyncImageResizer();
+    const controller = new AbortController();
+
+    const state = $state({ total: images.length, ready: 0 });
+    const task = () => state;
+    progressBar.add(task);
+
+    try {
+      await Promise.all(
+        images.map(async (image) => {
+          try {
+            return await resizer.resize(image, 2000, controller.signal);
+          } finally {
+            state.ready++;
+          }
+        }),
+      );
+    } finally {
+      progressBar.remove(task);
+    }
   }
 </script>
 
