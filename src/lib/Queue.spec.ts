@@ -1,20 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { WorkerQueue } from './Queue';
+import { Queue } from './Queue';
 
 describe('Queue', () => {
   it('should process tasks in parallel across all workers', async () => {
-    const delay = () => (ms: number) =>
-      new Promise<void>((resolve) => setTimeout(resolve, ms));
+    const delay = () => (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
-    const queue = new WorkerQueue([delay(), delay()]);
+    const queue = new Queue([delay(), delay()]);
 
-    const tasks = Array.from(
-      { length: 4 },
-      () => async (resourse: ReturnType<typeof delay>) => {
-        await resourse(100);
-        return Date.now().toString();
-      }
-    );
+    const tasks = Array.from({ length: 4 }, () => async (resourse: ReturnType<typeof delay>) => {
+      await resourse(100);
+      return Date.now().toString();
+    });
 
     const controller = new AbortController();
     const signal = controller.signal;

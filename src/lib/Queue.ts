@@ -2,7 +2,7 @@
  * Implements a queue that processes tasks (consumers) concurrently,
  * using a pool of provided resources.
  */
-export class WorkerQueue<Resource> implements Queue<Resource> {
+export class Queue<Resource> implements Queue<Resource> {
   private readonly busyResources = new Set<Resource>();
   private readonly pendingTasks: Array<{
     task: QueueConsumer<Resource, unknown>;
@@ -12,12 +12,12 @@ export class WorkerQueue<Resource> implements Queue<Resource> {
   }> = [];
 
   /**
-   * Creates an instance of WorkerQueue.
+   * Creates an instance of Queue.
    * @param resources An array of resources to be used by consumers. Must not be empty.
    */
   public constructor(private readonly resources: ReadonlyArray<Resource>) {
     if (!resources || resources.length === 0) {
-      throw new Error('WorkerQueue requires at least one resource.');
+      throw new Error('Queue requires at least one resource.');
     }
   }
 
