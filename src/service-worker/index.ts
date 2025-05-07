@@ -3,6 +3,7 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 import { build, files, version } from '$service-worker';
+import { WebShareTarget } from '../lib/WebShareTarget';
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
@@ -42,10 +43,11 @@ sw.addEventListener('fetch', (event) => {
     event.respondWith(
       (async () => {
         const formData = await event.request.formData();
-        await caches.delete('web-share-target-files');
+        // Delete previous data if it wasn't processed for some reason
+        await caches.delete(WebShareTarget.CacheName);
 
         const images = formData.getAll('image');
-        const mediaCache = await caches.open('web-share-target-files');
+        const mediaCache = await caches.open(WebShareTarget.CacheName);
 
         for (let i = 0; i < images.length; i++) {
           const image = images[i];
@@ -54,8 +56,8 @@ sw.addEventListener('fetch', (event) => {
             i.toString(),
             new Response(image, {
               headers: {
-                'Content-Type': image.type,
-                'X-Cropybara-Filename': image.name,
+                [WebShareTarget.TypeHeader]: image.type,
+                [WebShareTarget.FilenameHeader]: image.name,
               },
             }),
           );
