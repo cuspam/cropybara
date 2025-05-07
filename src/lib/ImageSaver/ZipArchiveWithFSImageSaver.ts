@@ -1,15 +1,30 @@
 import type { ImagesSaver } from './ImagesSaver';
+import { browser } from '$app/environment';
 
-export class SteamsaverImageSaver implements ImagesSaver {
+export class ZipArchiveWithFSImageSaver implements ImagesSaver {
+  public static readonly isSupported = browser && 'showSaveFilePicker' in window;
+
   public async save(
     name: string,
     images: AsyncGenerator<File>,
     onprogress?: () => void,
   ): Promise<void> {
-    const [{ default: streamSaver }, { default: JSZip }] = await Promise.all([
-      import('streamsaver'),
-      import('jszip'),
-    ]);
+    const jszipPromise = import('jszip');
+    // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/API/Window/showSaveFilePicker
+    const handle: FileSystemFileHandle = await showSaveFilePicker({
+      id: 'cropybara-results-zip',
+      startIn: 'downloads',
+      suggestedName: name + '.zip',
+      types: [
+        {
+          description: 'Zip archive',
+          accept: { 'application/zip': ['.zip'] },
+        },
+      ],
+    });
+
+    const fileStream = await handle.createWritable();
+    const { default: JSZip } = await jszipPromise;
 
     const zip = new JSZip();
 
@@ -19,10 +34,6 @@ export class SteamsaverImageSaver implements ImagesSaver {
     }
 
     const content = await zip.generateAsync({ type: 'blob' });
-
-    const fileStream = streamSaver.createWriteStream(name + '.zip', {
-      size: content.size,
-    });
 
     const readableStream = content.stream();
 

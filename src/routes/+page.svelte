@@ -6,12 +6,13 @@
   import { AsyncImageResizer } from '$lib/ImageResizer/AsyncImageResizer';
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
   import type { ImagesSaver } from '$lib/ImageSaver/ImagesSaver';
-  import { SteamsaverImageSaver } from '$lib/ImageSaver/SteamsaverImageSaver';
+  import { ZipArchiveWithStreamsaverImageSaver } from '$lib/ImageSaver/ZipArchiveWithStreamsaverImageSaver';
   import { CanvasChef } from '$lib/Chef/CanvasChef';
   import type { Chef } from '$lib/Chef/Chef';
   import { CarvingKnife } from '$lib/CarvingKnife/CarvingKnife';
   import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
   import { m } from '$lib/paraglide/messages.js';
+  import { ZipArchiveWithFSImageSaver } from '$lib/ImageSaver/ZipArchiveWithFSImageSaver';
 
   let images: ImageFile[] = $state([]);
   let config: { name: string; limit: number } | null = $state(null);
@@ -70,7 +71,10 @@
 
   async function handleCuts(cuts: ReadonlyArray<number>) {
     if (!config) return;
-    const saver: ImagesSaver = new SteamsaverImageSaver();
+
+    const saver: ImagesSaver = ZipArchiveWithFSImageSaver.isSupported
+      ? new ZipArchiveWithFSImageSaver()
+      : new ZipArchiveWithStreamsaverImageSaver();
 
     let task = $state({ total: cuts.length + 1, ready: 0 });
     const getter = () => task;
