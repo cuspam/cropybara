@@ -36,6 +36,7 @@ export class ZipArchiveWithFSImageSaver implements ImagesSaver {
     const stream = zip.generateInternalStream({
       type: 'arraybuffer',
       streamFiles: true,
+      compression: 'STORE',
     });
 
     await new Promise<void>((resolve, reject) => {

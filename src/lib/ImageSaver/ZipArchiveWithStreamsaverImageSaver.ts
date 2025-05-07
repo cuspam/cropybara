@@ -18,7 +18,7 @@ export class ZipArchiveWithStreamsaverImageSaver implements ImagesSaver {
       onprogress?.();
     }
 
-    const content = await zip.generateAsync({ type: 'blob' });
+    const content = await zip.generateAsync({ type: 'blob', compression: 'STORE' });
 
     const fileStream = streamSaver.createWriteStream(name + '.zip', {
       size: content.size,
