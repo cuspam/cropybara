@@ -9,9 +9,15 @@ export class FileTypes {
     zip: 'application/zip',
   };
 
+  protected static readonly defaultMime = 'application/octet-stream';
+
   public static getMimeByFilename(filename: string): string {
-    const ext = filename.split('.').pop()!;
-    return this.mapping[ext.toLowerCase()] ?? 'application/octet-stream';
+    const ext = filename.split('.');
+    if (ext.length > 1) {
+      return this.mapping[ext.pop()!.toLowerCase()] ?? this.defaultMime;
+    } else {
+      return this.defaultMime;
+    }
   }
 
   public static isZipArchive(file: File): boolean {
