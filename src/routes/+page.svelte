@@ -36,5 +36,5 @@
 {:else if !config}
   <ConfigScreen {widths} onCancel={handleCancel} onSubmit={handleConfig} />
 {:else}
-  <EditorScreen {images} />
+  <EditorScreen {images} limit={config.limit} />
 {/if}
