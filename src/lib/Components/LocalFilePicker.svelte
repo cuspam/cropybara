@@ -44,7 +44,7 @@
         }
       });
 
-      Promise.all(filesPromises)
+      await Promise.all(filesPromises)
         .then(async (results) => {
           const images = results.flat().filter((file) => {
             if (file.name.startsWith('.') || file.name.includes('/.')) {
