@@ -38,7 +38,7 @@
 
           const blob = await item.getType(imageType);
           const ext = imageType.split('/').pop()!;
-          const file = new File([blob], `clipboard-${Date.now()}-${i++}.${ext}`, {
+          const file = new File([blob], `clipboard-${Date.now()}-${i}.${ext}`, {
             type: imageType,
           });
           files.push(file);
