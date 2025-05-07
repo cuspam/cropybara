@@ -15,9 +15,10 @@ self.onmessage = async (event: MessageEvent<IncomingMessage>) => {
       console.error('Error processing archive in worker:', error);
       postMessage({
         error: `Failed to process archive: ${error instanceof Error ? error.message : String(error)}`,
+        filename: archiveFile.name,
         total: 0, // Indicate total is unknown
         ready: 0,
-      } satisfies Partial<ZipArchiveReaderErrorEvent>);
+      } satisfies ZipArchiveReaderErrorEvent);
     }
   } else {
     console.error('Worker received invalid data:', event.data);
