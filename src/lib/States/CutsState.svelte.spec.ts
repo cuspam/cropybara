@@ -16,28 +16,28 @@ describe('CutsState', () => {
       'should throw an error if minDistance has incorrect value: %s',
       (value) => {
         expect(() => new CutsState(value, 400, 1000, 5)).toThrowError();
-      }
+      },
     );
 
     it.each([0, -1, Number.NaN])(
       'should throw an error if maxDistance has incorrect value: %s',
       (value) => {
         expect(() => new CutsState(50, value, 1000, 5)).toThrowError();
-      }
+      },
     );
 
     it.each([0, -1, Number.NaN])(
       'should throw an error if height has incorrect value: %s',
       (value) => {
         expect(() => new CutsState(300, 400, value, 5)).toThrowError();
-      }
+      },
     );
 
     it.each([0, -1, Number.NaN])(
       'should throw an error if divisor has incorrect value: %s',
       (value) => {
         expect(() => new CutsState(300, 400, 1000, value)).toThrowError();
-      }
+      },
     );
   });
 

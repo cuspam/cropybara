@@ -8,13 +8,7 @@
   onDestroy(() => URL.revokeObjectURL(src));
 </script>
 
-<img
-  {src}
-  loading="lazy"
-  width={image.width}
-  height={image.height}
-  alt={image.name}
-/>
+<img {src} loading="lazy" width={image.width} height={image.height} alt={image.name} />
 
 <style>
   img {
