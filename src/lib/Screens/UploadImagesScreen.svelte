@@ -2,6 +2,7 @@
   import LocalFilePicker from '$lib/Components/LocalFilePicker.svelte';
   import Footer from '$lib/Components/Footer.svelte';
   import type { ImageFile } from '$lib/ImageFile';
+  import InstallButton from '$lib/Components/InstallButton.svelte';
 
   const { onImages }: { onImages: (images: ImageFile[]) => void } = $props();
 </script>
@@ -11,11 +12,13 @@
 </svelte:head>
 
 <main>
-  <div></div>
+  <header>
+    <InstallButton />
+  </header>
   <LocalFilePicker {onImages} />
-  <div class="footer">
+  <footer>
     <Footer />
-  </div>
+  </footer>
 </main>
 
 <style lang="scss">
@@ -26,8 +29,12 @@
     height: 100vh;
   }
 
-  .footer {
+  footer {
     margin-bottom: 3em;
+  }
+
+  header {
+    margin-top: 3em;
   }
 
   @supports (height: 100dvh) {
