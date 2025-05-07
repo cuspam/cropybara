@@ -2,6 +2,7 @@
   import UploadImagesScreen from '$lib/Screens/UploadImagesScreen.svelte';
   import type { ImageFile } from '$lib/ImageFile';
   import ConfigScreen from '$lib/Screens/ConfigScreen.svelte';
+  import EditorScreen from '$lib/Screens/EditorScreen.svelte';
 
   let images: ImageFile[] = $state([]);
   let config: { name: string; limit: number } | null = $state(null);
@@ -35,5 +36,5 @@
 {:else if !config}
   <ConfigScreen {widths} onCancel={handleCancel} onSubmit={handleConfig} />
 {:else}
-  Processing...
+  <EditorScreen {images} />
 {/if}
