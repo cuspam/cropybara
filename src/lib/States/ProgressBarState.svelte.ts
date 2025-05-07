@@ -70,6 +70,8 @@ export class ProgressBarState {
   /**
    * Marks a task getter function for removal.
    * If all tasks are marked for removal after this operation, the task list is cleared.
+   * Tasks are not removed immediately to ensure more predictable progress bar behavior
+   * when multiple tasks start concurrently.
    */
   public remove(task: () => ProgressBarStateItem) {
     const taskIndex = this.#tasks.findIndex((entry) => entry.task === task);
