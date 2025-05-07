@@ -76,7 +76,8 @@
       ? new ZipArchiveWithFSImageSaver()
       : new ZipArchiveWithStreamsaverImageSaver();
 
-    let task = $state({ total: cuts.length + 1, ready: 0 });
+    /* (cuts + 1) + 1 for the zip file */
+    let task = $state({ total: cuts.length + 1 + 1, ready: 0 });
     const getter = () => task;
     progressBar.add(getter);
 

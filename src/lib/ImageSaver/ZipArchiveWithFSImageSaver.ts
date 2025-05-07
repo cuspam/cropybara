@@ -50,5 +50,6 @@ export class ZipArchiveWithFSImageSaver implements ImagesSaver {
       stream.on('error', reject);
       stream.resume();
     });
+    onprogress?.();
   }
 }

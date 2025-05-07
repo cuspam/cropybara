@@ -29,7 +29,10 @@ export class ZipArchiveWithStreamsaverImageSaver implements ImagesSaver {
     // more optimized pipe version
     // (Safari may have pipeTo but it's useless without the WritableStream)
     if (window.WritableStream && readableStream.pipeTo) {
-      return readableStream.pipeTo(fileStream).then(() => console.log('done writing'));
+      return readableStream.pipeTo(fileStream).then(() => {
+        console.log('done writing');
+        onprogress?.();
+      });
     }
 
     // Write (pipe) manually
@@ -37,7 +40,14 @@ export class ZipArchiveWithStreamsaverImageSaver implements ImagesSaver {
 
     const reader = readableStream.getReader();
     const pump: () => Promise<void> = () =>
-      reader.read().then((res) => (res.done ? writer.close() : writer.write(res.value).then(pump)));
+      reader.read().then((res) => {
+        if (res.done) {
+          writer.close();
+          onprogress?.();
+        } else {
+          writer.write(res.value).then(pump);
+        }
+      });
 
     pump();
   }
