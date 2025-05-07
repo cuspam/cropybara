@@ -1,12 +1,58 @@
 /**
  * A generic class to listen for messages and errors from a Web Worker
  * and yield them as an asynchronous stream of messages.
+ * This version uses an internal queue to prevent message loss under high frequency.
  */
 export class WebWorkerMessageListener<TMessage> {
   private worker: Worker;
+  private messageQueue: TMessage[] = [];
+  private errorQueue: Error[] = [];
+  private waitingResolver: ((value: TMessage | PromiseLike<TMessage>) => void) | null = null;
+  private waitingRejector: ((reason?: unknown) => void) | null = null;
+  private isTerminated = false; // Flag to indicate completion of work
+
+  private messageListener: ((event: MessageEvent) => void) | null = null;
+  private errorListener: ((event: ErrorEvent) => void) | null = null;
 
   constructor(worker: Worker) {
     this.worker = worker;
+
+    this.messageListener = (event: MessageEvent) => {
+      const message = event.data as TMessage;
+      if (this.waitingResolver) {
+        // If there is a pending promise, resolve it immediately
+        const resolver = this.waitingResolver;
+        this.waitingResolver = null;
+        this.waitingRejector = null; // Also reset the rejector
+        resolver(message);
+      } else {
+        // Otherwise, add the message to the queue
+        this.messageQueue.push(message);
+      }
+    };
+
+    this.errorListener = (errorEvent: ErrorEvent) => {
+      console.error(
+        'Error from worker global scope:',
+        errorEvent.message,
+        errorEvent.filename,
+        errorEvent.lineno,
+      );
+      const error = new Error(`Worker error: ${errorEvent.message || 'Unknown worker error'}`);
+      if (this.waitingRejector) {
+        // If there is a pending promise, reject it
+        const rejector = this.waitingRejector;
+        this.waitingResolver = null;
+        this.waitingRejector = null;
+        rejector(error);
+      } else {
+        // Otherwise, add the error to the error queue
+        this.errorQueue.push(error);
+      }
+    };
+
+    this.worker.addEventListener('message', this.messageListener);
+    this.worker.addEventListener('error', this.errorListener);
   }
 
   /**
@@ -18,70 +64,69 @@ export class WebWorkerMessageListener<TMessage> {
    * when it's no longer needed.
    */
   public async *listen(): AsyncGenerator<TMessage, void, unknown> {
-    let messageListener: ((event: MessageEvent) => void) | null = null;
-    let errorListener: ((event: ErrorEvent) => void) | null = null;
-
-    // Store current promise resolvers to allow cleanup if generator is terminated externally
-    let currentResolve: ((value: TMessage | PromiseLike<TMessage>) => void) | null = null;
-    let currentReject: ((reason?: unknown) => void) | null = null;
-
-    messageListener = (event: MessageEvent) => {
-      if (currentResolve) {
-        currentResolve(event.data as TMessage);
-      }
-    };
-
-    errorListener = (errorEvent: ErrorEvent) => {
-      // This listener catches errors like script errors in the worker itself,
-      // or unhandled exceptions that cause the worker to terminate.
-      console.error(
-        'Error from worker global scope:',
-        errorEvent.message,
-        errorEvent.filename,
-        errorEvent.lineno,
-      );
-      if (currentReject) {
-        currentReject(new Error(`Worker error: ${errorEvent.message || 'Unknown worker error'}`));
-      }
-    };
-
-    this.worker.addEventListener('message', messageListener);
-    this.worker.addEventListener('error', errorListener);
-
     try {
-      while (true) {
-        // Wait for the next message or an error
-        const eventData = await new Promise<TMessage>((resolve, reject) => {
-          currentResolve = resolve;
-          currentReject = reject;
-        });
-        yield eventData; // Yield the received message data
+      while (!this.isTerminated) {
+        // Continue until explicitly indicated to terminate
+        if (this.errorQueue.length > 0) {
+          // If there are errors in the queue, throw the first one
+          const error = this.errorQueue.shift()!;
+          throw error;
+        }
 
-        // Reset resolvers for the next iteration's promise
-        currentResolve = null;
-        currentReject = null;
+        if (this.messageQueue.length > 0) {
+          // If there are messages in the queue, yield the first one
+          yield this.messageQueue.shift()!;
+          continue; // Move to the next iteration to check the queues again
+        }
+
+        // If there are no queues, wait for the next message/error
+        try {
+          const message = await new Promise<TMessage>((resolve, reject) => {
+            this.waitingResolver = resolve;
+            this.waitingRejector = reject;
+          });
+          yield message;
+        } catch (error) {
+          // This error came from waitingRejector (i.e., from errorListener)
+          // or if the generator was terminated externally while we were waiting.
+          if (
+            error instanceof Error &&
+            error.message.startsWith('WebWorkerMessageListener: Generator terminated')
+          ) {
+            // This is a specific error from finally, just exit
+            this.isTerminated = true; // Set the flag to exit the loop
+            return;
+          }
+          throw error; // Re-throw other errors
+        } finally {
+          // Reset if the promise has completed (successfully or with an error),
+          // but the listeners have not yet been called to resolve/reject it
+          // (e.g., if the generator was terminated externally)
+          this.waitingResolver = null;
+          this.waitingRejector = null;
+        }
       }
-    } catch {
-      // This catch block will be hit if the promise created within the loop is rejected
-      // (e.g., by the worker's 'error' event) or if any other error occurs during promise handling.
-      // The generator will then terminate. The consumer (for...await...of loop) can also catch this error.
-      // console.debug('WebWorkerMessageListener: Error during listen, generator terminating.', error);
-      // No need to re-throw; the generator simply ends.
-      return;
     } finally {
-      // This block executes when the generator is exited, either normally (e.g. loop break in consumer),
-      // by an error, or if the consumer stops iterating (e.g. 'return' or 'break' in for...await...of).
-      if (messageListener) {
-        this.worker.removeEventListener('message', messageListener);
+      this.isTerminated = true; // Ensure it's marked as terminated
+
+      // Cleanup listeners
+      if (this.messageListener) {
+        this.worker.removeEventListener('message', this.messageListener);
+        this.messageListener = null;
       }
-      if (errorListener) {
-        this.worker.removeEventListener('error', errorListener);
+      if (this.errorListener) {
+        this.worker.removeEventListener('error', this.errorListener);
+        this.errorListener = null;
       }
-      // If there was a pending promise when the generator exited, reject it.
-      if (currentReject) {
-        (currentReject as (reason?: unknown) => void)(
+
+      // If there was a pending promise when exiting the generator (e.g., consumer.return()),
+      // reject it.
+      if (this.waitingRejector) {
+        this.waitingRejector(
           new Error('WebWorkerMessageListener: Generator terminated while awaiting message.'),
         );
+        this.waitingResolver = null;
+        this.waitingRejector = null;
       }
     }
   }
