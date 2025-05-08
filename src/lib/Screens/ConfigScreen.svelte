@@ -4,6 +4,8 @@
   import Button from '$lib/Components/Button.svelte';
   import LabeledCheckbox from '$lib/Components/LabeledCheckbox.svelte';
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
+  import { onMount } from 'svelte';
+  import { Analytics } from '$lib/Analytics';
 
   type Props = {
     widths: Array<[number, string[]]>;
@@ -26,6 +28,10 @@
     e.preventDefault();
     onSubmit({ name, limit });
   }
+
+  onMount(() => {
+    Analytics.trackScreen('ConfigScreen');
+  });
 </script>
 
 <main>

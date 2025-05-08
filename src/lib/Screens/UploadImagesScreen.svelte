@@ -3,8 +3,13 @@
   import Footer from '$lib/Components/Footer.svelte';
   import type { ImageFile } from '$lib/ImageFile';
   import InstallButton from '$lib/Components/InstallButton.svelte';
+  import { onMount } from 'svelte';
+  import { Analytics } from '$lib/Analytics';
 
   const { onImages }: { onImages: (images: ImageFile[]) => void } = $props();
+  onMount(() => {
+    Analytics.trackScreen('UploadImageScreen');
+  });
 </script>
 
 <svelte:head>

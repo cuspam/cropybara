@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import { CutsState } from '$lib/States/CutsState.svelte';
   import Cuts from '$lib/Components/Cuts.svelte';
+  import { Analytics } from '$lib/Analytics';
 
   type Props = {
     images: ReadonlyArray<ImageFile>;
@@ -22,6 +23,10 @@
   const zoom = $derived(actualWidth / imagesWidth);
   // Current scroll position
   let scrollY = $state(0);
+
+  onMount(() => {
+    Analytics.trackScreen('EditorScreen');
+  });
 </script>
 
 <svelte:window bind:scrollY />
