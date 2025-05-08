@@ -13,6 +13,7 @@
   import { AlertsLevel, AlertsState } from '$lib/States/AlertsState.svelte';
   import { m } from '$lib/paraglide/messages.js';
   import { ZipArchiveWithFSImageSaver } from '$lib/ImageSaver/ZipArchiveWithFSImageSaver';
+  import { Analytics } from '$lib/Analytics';
 
   let images: ImageFile[] = $state([]);
   let config: { name: string; limit: number } | null = $state(null);
@@ -102,6 +103,7 @@
       );
       console.debug(slicingMeasure.duration);
       alerts.display(AlertsLevel.Success, m.Done());
+      Analytics.trackScreen('ResultScreen');
     } finally {
       progressBar.remove(getter);
     }
