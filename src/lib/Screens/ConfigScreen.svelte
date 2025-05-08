@@ -22,7 +22,7 @@
   let forceWidth = $state(false);
 
   let detectors = [ConfigDetector.Manual, ConfigDetector.PixelComparison];
-  let detectorType: ConfigDetector = $state(ConfigDetector.Manual);
+  let detectorType: ConfigDetector = $state(ConfigDetector.PixelComparison);
   let pcDetectorSensitivity = $state(90);
   let pcDetectorStep = $state(5);
   let pcDetectorMargin = $state(5);

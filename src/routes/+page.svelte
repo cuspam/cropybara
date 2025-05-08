@@ -14,10 +14,15 @@
   import { m } from '$lib/paraglide/messages.js';
   import { ZipArchiveWithFSImageSaver } from '$lib/ImageSaver/ZipArchiveWithFSImageSaver';
   import { Analytics } from '$lib/Analytics';
-  import type { ConfigState } from '$lib/ConfigState';
+  import { ConfigDetector, type ConfigState } from '$lib/ConfigState';
+  import {
+    PixelComparisonDetector,
+    type PixelComparisonDetectorParams,
+  } from '$lib/Detectors/PixelComparisonDetector';
 
   let images: ImageFile[] = $state([]);
   let config: ConfigState | null = $state(null);
+  let cutsInit: number[] = $state([]);
   const progressBar = ProgressBarState.use();
   const alerts = AlertsState.use();
 
@@ -38,6 +43,7 @@
 
   function handleCancel() {
     images = [];
+    cutsInit = [];
     config = null;
   }
 
@@ -66,6 +72,28 @@
       } finally {
         progressBar.remove(task);
       }
+    }
+
+    if (cfg.detector === ConfigDetector.PixelComparison) {
+      const state = $state({ total: 1, ready: 0 });
+      const task = () => state;
+      progressBar.add(task);
+      const start = Date.now();
+
+      try {
+        cutsInit = await PixelComparisonDetector.process(images, {
+          margins: cfg.margins,
+          maxDistance: cfg.limit,
+          step: cfg.step,
+          sensitivity: cfg.sensitivity / 100,
+          maxSearchDeviationFactor: 0.5,
+        });
+      } catch (err) {
+        console.error(`Failed to process images`, err);
+      } finally {
+        progressBar.remove(task);
+      }
+      console.log('Done!', 'Duration=', Date.now() - start, cutsInit);
     }
 
     config = cfg;
@@ -116,5 +144,11 @@
 {:else if !config}
   <ConfigScreen {widths} onCancel={handleCancel} onSubmit={handleConfig} />
 {:else}
-  <EditorScreen {images} limit={config.limit} onCancel={handleCancel} onSubmit={handleCuts} />
+  <EditorScreen
+    {images}
+    {cutsInit}
+    limit={config.limit}
+    onCancel={handleCancel}
+    onSubmit={handleCuts}
+  />
 {/if}
