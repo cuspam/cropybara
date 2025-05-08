@@ -15,6 +15,10 @@ export class Analytics {
     ...args: [Command, ...Gtag.GtagCommands[Command]]
   ) {
     if (!browser) return;
-    gtag(...args);
+    try {
+      gtag(...args);
+    } catch {
+      // ignored
+    }
   }
 }
