@@ -16,6 +16,7 @@ export class CutsState {
     maxDistance: number,
     public readonly height: number,
     public readonly divisor: number,
+    init: number[] = [],
   ) {
     if (height <= 0 || isNaN(height)) {
       throw new Error('height must be a positive number.');
@@ -41,6 +42,7 @@ export class CutsState {
     this.maxDistance = this.alignToDivisor(maxDistance);
     this.minDistance = this.alignToDivisor(minDistance);
 
+    this.#cuts = init;
     this.fillCutsToBottom();
   }
 
