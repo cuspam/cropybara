@@ -6,11 +6,13 @@
   import { ProgressBarState } from '$lib/States/ProgressBarState.svelte';
   import { onMount } from 'svelte';
   import { Analytics } from '$lib/Analytics';
+  import LabeledSelect from '$lib/Components/LabeledSelect.svelte';
+  import { ConfigDetector, type ConfigState } from '$lib/ConfigState';
 
   type Props = {
     widths: Array<[number, string[]]>;
     onCancel: () => void;
-    onSubmit: (options: { name: string; limit: number }) => void;
+    onSubmit: (options: ConfigState) => void;
   };
 
   const { onCancel, onSubmit, widths }: Props = $props();
@@ -19,6 +21,12 @@
   let limit = $state(20_000);
   let forceWidth = $state(false);
 
+  let detectors = [ConfigDetector.Manual, ConfigDetector.PixelComparison];
+  let detectorType: ConfigDetector = $state(ConfigDetector.Manual);
+  let pcDetectorSensitivity = $state(90);
+  let pcDetectorStep = $state(5);
+  let pcDetectorMargin = $state(5);
+
   function handleReset(e: Event) {
     e.preventDefault();
     onCancel();
@@ -26,7 +34,14 @@
 
   function handleSubmit(e: Event) {
     e.preventDefault();
-    onSubmit({ name, limit });
+    onSubmit({
+      name,
+      limit,
+      detector: detectorType,
+      step: pcDetectorStep,
+      sensitivity: pcDetectorSensitivity,
+      margins: pcDetectorMargin,
+    });
   }
 
   onMount(() => {
@@ -43,6 +58,32 @@
     <LabeledInput bind:value={limit} required type="number" min="1" max="65000"
       >{m.ConfigScreen_HeightLimit_Label()}</LabeledInput
     >
+
+    <LabeledSelect bind:value={detectorType}>
+      {#snippet label()}
+        {m.ConfigScreen_DetectorType_Label()}
+      {/snippet}
+
+      {#each detectors as detector (detector)}
+        <option value={detector}>{m[`ConfigScreen_Detector_Name_${detector}`]()}</option>
+      {/each}
+    </LabeledSelect>
+
+    {#if detectorType === ConfigDetector.PixelComparison}
+      <LabeledInput type="number" min={1} max={100} bind:value={pcDetectorSensitivity} required
+        >{m.ConfigScreen_PCDetector_Sensitivity_Label()}</LabeledInput
+      >
+      <LabeledInput type="number" min={1} bind:value={pcDetectorStep} required
+        >{m.ConfigScreen_PCDetector_Step_Label()}</LabeledInput
+      >
+      <LabeledInput
+        type="number"
+        min={0}
+        max={Math.floor(widths[0][0] / 2)}
+        required
+        bind:value={pcDetectorMargin}>{m.ConfigScreen_PCDetector_Margins_Label()}</LabeledInput
+      >
+    {/if}
 
     {#if widths.length > 1}
       <div class="force-width-notice" role="alert">
@@ -76,6 +117,8 @@
 <style lang="scss">
   main {
     padding: 0 1em;
+    margin: 0 auto;
+    max-width: 600px;
   }
 
   h1 {

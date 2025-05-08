@@ -32,5 +32,11 @@
   "ConfigScreen_ForceWithNotice_Checkbox_Label": "Изменить ширину всех изображений на {width}px",
   "ConfigScreen_ForceWithNotice_Description": "Не все изображения одинаковой ширины! Большинство изображений ({length}) имеют ширину {width}px, однако есть исключения",
   "ConfigScreen_ForceWithNotice_Exception": "{length} с шириной {width}px",
+  "ConfigScreen_Detector_Name_Manual": "Отключить",
+  "ConfigScreen_Detector_Name_PixelComparison": "Горизонтальное сравнение",
+  "ConfigScreen_DetectorType_Label": "Автоматическая расстановка линий",
+  "ConfigScreen_PCDetector_Sensitivity_Label": "Чувствительность",
+  "ConfigScreen_PCDetector_Step_Label": "Размер шага",
+  "ConfigScreen_PCDetector_Margins_Label": "Игнорируемые отступы по горизонтали",
   "Done": "Все изображения успешно порезаны."
 }

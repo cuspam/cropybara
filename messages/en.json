@@ -32,5 +32,11 @@
   "ConfigScreen_ForceWithNotice_Checkbox_Label": "Resize all images to {width}px width",
   "ConfigScreen_ForceWithNotice_Description": "Not all images have the same width! Most images ({length}) have a width of {width}px, however there are exceptions",
   "ConfigScreen_ForceWithNotice_Exception": "{length} with width {width}px",
+  "ConfigScreen_Detector_Name_Manual": "Manual",
+  "ConfigScreen_Detector_Name_PixelComparison": "Pixel comparison",
+  "ConfigScreen_DetectorType_Label": "Detector type",
+  "ConfigScreen_PCDetector_Sensitivity_Label": "Object detection sensitivity",
+  "ConfigScreen_PCDetector_Step_Label": "Scan line step",
+  "ConfigScreen_PCDetector_Margins_Label": "Ignorable horizontal margins",
   "Done": "All images have been successfully sliced."
 }

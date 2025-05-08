@@ -14,9 +14,10 @@
   import { m } from '$lib/paraglide/messages.js';
   import { ZipArchiveWithFSImageSaver } from '$lib/ImageSaver/ZipArchiveWithFSImageSaver';
   import { Analytics } from '$lib/Analytics';
+  import type { ConfigState } from '$lib/ConfigState';
 
   let images: ImageFile[] = $state([]);
-  let config: { name: string; limit: number } | null = $state(null);
+  let config: ConfigState | null = $state(null);
   const progressBar = ProgressBarState.use();
   const alerts = AlertsState.use();
 
@@ -40,7 +41,7 @@
     config = null;
   }
 
-  async function handleConfig(cfg: { name: string; limit: number }) {
+  async function handleConfig(cfg: ConfigState) {
     const outliers = images.filter((image) => image.width !== widths[0][0]);
 
     if (outliers.length > 0) {
