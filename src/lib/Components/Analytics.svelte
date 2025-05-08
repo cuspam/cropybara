@@ -1,12 +1,18 @@
 <script lang="ts">
-  import { PUBLIC_GA_MEASUREMENT_ID } from '$env/static/public';
+  import * as env from '$env/static/public';
   import { onMount } from 'svelte';
 
+  const id = !(
+    'PUBLIC_GA_MEASUREMENT_ID' in env && typeof env.PUBLIC_GA_MEASUREMENT_ID === 'string'
+  )
+    ? null
+    : env.PUBLIC_GA_MEASUREMENT_ID;
+
   onMount(() => {
-    if (!PUBLIC_GA_MEASUREMENT_ID) return;
+    if (!id) return;
     try {
       gtag('js', new Date());
-      gtag('config', PUBLIC_GA_MEASUREMENT_ID, { send_page_view: false });
+      gtag('config', id, { send_page_view: false });
     } catch {
       console.warn('Failed to initialize Google Analytics');
     }
@@ -14,8 +20,8 @@
 </script>
 
 <svelte:head>
-  {#if PUBLIC_GA_MEASUREMENT_ID}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={PUBLIC_GA_MEASUREMENT_ID}">
+  {#if id}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={id}">
     </script>
     <script>
       window.dataLayer = window.dataLayer || [];

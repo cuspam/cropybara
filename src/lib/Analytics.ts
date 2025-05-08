@@ -1,8 +1,6 @@
 import { browser } from '$app/environment';
 
 export class Analytics {
-  protected static googleAnalyticsId: string | undefined;
-
   public static trackScreen(name: string) {
     this.googleAnalytics('event', 'page_view', {
       page_title: name,
