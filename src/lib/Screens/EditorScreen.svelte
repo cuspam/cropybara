@@ -6,6 +6,7 @@
   import Cuts from '$lib/Components/Cuts.svelte';
   import { Analytics } from '$lib/Analytics';
   import { m } from '$lib/paraglide/messages.js';
+  import CutsNavigation from '$lib/Components/CutsNavigation.svelte';
 
   type Props = {
     images: ReadonlyArray<ImageFile>;
@@ -25,13 +26,31 @@
   const zoom = $derived(actualWidth / imagesWidth);
   // Current scroll position
   let scrollY = $state(0);
+  let windowHeight = $state(0);
+  const currentCutIndex = $derived.by(() => {
+    const pos = scrollY / zoom + (windowHeight / 2) * zoom;
+    return cuts.cuts.map((p, i) => [Math.abs(p - pos), i]).sort(([a], [b]) => a - b)[0][1];
+  });
+
+  function prevCut() {
+    const prevCut = cuts.cuts[Math.max(0, currentCutIndex - 1)] - windowHeight / 2 / zoom;
+    scrollY = prevCut * zoom;
+  }
+
+  function nextCut() {
+    const nextCut =
+      cuts.cuts[Math.min(cuts.cuts.length - 1, currentCutIndex + 1)] - windowHeight / 2 / zoom;
+    scrollY = nextCut * zoom;
+  }
+
+  $inspect(cuts.cuts);
 
   onMount(() => {
     Analytics.trackScreen('EditorScreen');
   });
 </script>
 
-<svelte:window bind:scrollY />
+<svelte:window bind:scrollY bind:innerHeight={windowHeight} />
 
 <svelte:head>
   <title>{m.EditorScreen_Title()}</title>
@@ -59,6 +78,13 @@
       />
     </svg>
   </button>
+
+  <CutsNavigation
+    total={cuts.cuts.length}
+    current={currentCutIndex + 1}
+    onPrevClick={prevCut}
+    onNextClick={nextCut}
+  />
 </main>
 
 <style lang="scss">
