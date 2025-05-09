@@ -16,6 +16,9 @@
   @use '../../style/mixins.scss';
 
   select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     @include mixins.input;
   }
 </style>
