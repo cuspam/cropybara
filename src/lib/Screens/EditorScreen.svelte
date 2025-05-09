@@ -15,7 +15,7 @@
   };
   const { images, limit, onCancel, onSubmit, cutsInit }: Props = $props();
   const height = $derived(images.reduce((acc, img) => acc + img.height, 0));
-  const cuts = $derived(new CutsState(50, limit, height, 1, cutsInit));
+  const cuts = new CutsState(50, limit, height, 1, cutsInit);
   // Width of the image
   const imagesWidth = $derived(images.length > 0 ? images[0].width : 0);
   // Width with which images are displayed on the user's screen
