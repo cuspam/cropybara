@@ -5,6 +5,7 @@
   import InstallButton from '$lib/Components/InstallButton.svelte';
   import { onMount } from 'svelte';
   import { Analytics } from '$lib/Analytics';
+  import { m } from '$lib/paraglide/messages.js';
 
   const { onImages }: { onImages: (images: ImageFile[]) => void } = $props();
   onMount(() => {
@@ -13,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>Cropybara</title>
+  <title>{m.UploadImagesScreen_Title()}</title>
 </svelte:head>
 
 <main>

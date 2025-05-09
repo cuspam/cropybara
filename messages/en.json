@@ -23,7 +23,9 @@
   "Picker_LocalFilePicker_ErrorProcessingFiles": "Error processing files: {error}",
   "Picker_LocalFilePicker_ErrorInvalidFileType": "File \"{name}\" is not an image but {type}.",
   "Picker_LocalFilePicker_ErrorImageLoadingFailed": "Failed to read image \"{name}\": {error}",
+  "UploadImagesScreen_Title": "Cropybara — Webtoon Stitcher & Cropper",
   "UploadImagesScreen_SourceCodeLink_Text": "Source code",
+  "ConfigScreen_Title": "Cropybara — Settings",
   "ConfigScreen_Header": "Settings",
   "ConfigScreen_ProjectName_Label": "Project name",
   "ConfigScreen_HeightLimit_Label": "Height limit, px",
@@ -38,5 +40,6 @@
   "ConfigScreen_PCDetector_Sensitivity_Label": "Object detection sensitivity, %",
   "ConfigScreen_PCDetector_Step_Label": "Scan line step, px",
   "ConfigScreen_PCDetector_Margins_Label": "Ignorable horizontal margins, px",
+  "EditorScreen_Title": "Cropybara — Editor",
   "Done": "All images have been successfully sliced."
 }

@@ -49,6 +49,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>{m.ConfigScreen_Title()}</title>
+</svelte:head>
+
 <main>
   <form onreset={handleReset} onsubmit={handleSubmit}>
     <h1>{m.ConfigScreen_Header()}</h1>

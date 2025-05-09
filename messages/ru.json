@@ -23,7 +23,9 @@
   "Picker_LocalFilePicker_ErrorProcessingFiles": "Ошибка обработки файлов: {error}",
   "Picker_LocalFilePicker_ErrorInvalidFileType": "Файл \"{name}\" это не изображение, а {type}.",
   "Picker_LocalFilePicker_ErrorImageLoadingFailed": "Не удалось прочитать изображение \"{name}\": {error}",
+  "UploadImagesScreen_Title": "Cropybara — Склейка и нарезка вебтунов",
   "UploadImagesScreen_SourceCodeLink_Text": "Исходный код",
+  "ConfigScreen_Title": "Cropybara — Настройки",
   "ConfigScreen_Header": "Настройки",
   "ConfigScreen_ProjectName_Label": "Название проекта",
   "ConfigScreen_HeightLimit_Label": "Ограничение по высоте, px",
@@ -38,5 +40,6 @@
   "ConfigScreen_PCDetector_Sensitivity_Label": "Чувствительность, %",
   "ConfigScreen_PCDetector_Step_Label": "Размер шага, px",
   "ConfigScreen_PCDetector_Margins_Label": "Игнорируемые отступы по горизонтали, px",
+  "EditorScreen_Title": "Cropybara — Редактор",
   "Done": "Все изображения успешно порезаны."
 }

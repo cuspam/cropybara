@@ -5,6 +5,7 @@
   import { CutsState } from '$lib/States/CutsState.svelte';
   import Cuts from '$lib/Components/Cuts.svelte';
   import { Analytics } from '$lib/Analytics';
+  import { m } from '$lib/paraglide/messages.js';
 
   type Props = {
     images: ReadonlyArray<ImageFile>;
@@ -31,6 +32,10 @@
 </script>
 
 <svelte:window bind:scrollY />
+
+<svelte:head>
+  <title>{m.EditorScreen_Title()}</title>
+</svelte:head>
 
 <main>
   <Scroll {images} bind:width={actualWidth} />
