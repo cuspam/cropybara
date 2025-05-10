@@ -19,11 +19,12 @@
   import pLimit from 'p-limit';
   import { ImageFile } from '$lib/ImageFile';
   import WebShareTargetHandler from '$lib/Components/FilePicker/WebShareTargetHandler.svelte';
+  import { browser } from '$app/environment';
 
   const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
   const { onImages }: { onImages: (images: ImageFile[]) => void } = $props();
-  const queue = pLimit(navigator?.hardwareConcurrency ?? 4);
+  const queue = pLimit(browser ? (navigator?.hardwareConcurrency ?? 4) : 1);
 
   async function handleFiles(files: File[]) {
     if (files.length === 0) {
