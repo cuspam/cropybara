@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "test:unit": "vitest",
-    "test": "npm run test:unit -- --run"
+    "test:e2e": "playwright test",
+    "test": "bun run test:unit -- --run && bun run test:e2e"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
@@ -19,6 +20,7 @@
     "@fontsource/pt-sans": "^5.2.5",
     "@inlang/paraglide-js": "^2.0.12",
     "@neoconfetti/svelte": "^2.0.0",
+    "@playwright/test": "^1.52.0",
     "@sveltejs/adapter-static": "^3.0.8",
     "@sveltejs/kit": "^2.16.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
