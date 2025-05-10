@@ -33,7 +33,12 @@ export class RowPixelProvider {
       this.canvas.height = this.canvasHeight;
     }
 
-    const ctx = this.canvas.getContext('2d', { willReadFrequently: true });
+    // SvelteKit's linter is found ctx as ImageBitmapRenderingContext for some reason.
+    const ctx = this.canvas.getContext('2d', { willReadFrequently: true }) as
+      | CanvasRenderingContext2D
+      | OffscreenCanvasRenderingContext2D
+      | null;
+
     if (!ctx) throw new Error('Failed to get 2D context for strip canvas');
     this.ctx = ctx;
     this.ctx.imageSmoothingEnabled = false; // For precise pixel data

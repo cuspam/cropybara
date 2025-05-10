@@ -10,10 +10,13 @@
     'PUBLIC_YANDEX_OAUTH_REDIRECT_URI' in env &&
     typeof env.PUBLIC_YANDEX_OAUTH_REDIRECT_URI === 'string' &&
     env.PUBLIC_YANDEX_OAUTH_REDIRECT_URI;
+
+  const { disabled }: { disabled: boolean } = $props();
 </script>
 
 <a
   href="https://oauth.yandex.ru/authorize?response_type=token&client_id={clientId}&redirect_uri={redirectUri}"
+  class:disabled
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
