@@ -11,6 +11,7 @@
   user-select: none;
   align-items: center;
   gap: 0.4em;
+  text-decoration: none;
 
   // Apply disabled styles if :disabled pseudo-class or .disabled class is present
   &:disabled,
