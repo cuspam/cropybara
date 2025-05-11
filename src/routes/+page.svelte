@@ -14,17 +14,17 @@
   import { m } from '$lib/paraglide/messages.js';
   import { ZipArchiveWithFSImageSaver } from '$lib/ImageSaver/ZipArchiveWithFSImageSaver';
   import { Analytics } from '$lib/Analytics';
-  import { ConfigDetector, type ConfigState } from '$lib/ConfigState';
-  import {
-    PixelComparisonDetector,
-    type PixelComparisonDetectorParams,
-  } from '$lib/Detectors/PixelComparisonDetector';
+  import { ConfigDenoiser, ConfigDetector, type ConfigState } from '$lib/ConfigState';
+  import { PixelComparisonDetector } from '$lib/Detectors/PixelComparisonDetector';
+  import { UnjpegDenoiser } from '$lib/Denoiser/UnjpegDenoiser';
 
   let images: ImageFile[] = $state([]);
   let config: ConfigState | null = $state(null);
   let cutsInit: number[] = $state([]);
   const progressBar = ProgressBarState.use();
   const alerts = AlertsState.use();
+  const denoiser = new UnjpegDenoiser('https://denoiser.cropybara.app/');
+  let denoiserPromise: Promise<unknown> | null = $state(null);
 
   let widths = $derived(
     Object.entries(
@@ -74,6 +74,28 @@
       }
     }
 
+    console.log(cfg);
+
+    if (cfg.denoiser === ConfigDenoiser.Unjpeg) {
+      const state = $state({ total: images.length, ready: 0 });
+      const task = () => state;
+      progressBar.add(task);
+      denoiserPromise = Promise.all(
+        images.map(async (image, index) => {
+          try {
+            images[index] = await denoiser.process(image);
+          } catch (err) {
+            alerts.display(AlertsLevel.Error, m.ConfigScreen_DenoiserError({ name: image.name }));
+          } finally {
+            state.ready++;
+          }
+        }),
+      ).finally(() => {
+        progressBar.remove(task);
+        denoiserPromise = null;
+      });
+    }
+
     if (cfg.detector === ConfigDetector.PixelComparison) {
       const state = $state({ total: 1, ready: 0 });
       const task = () => state;
@@ -101,6 +123,11 @@
 
   async function handleCuts(cuts: ReadonlyArray<number>) {
     if (!config) return;
+
+    if (denoiserPromise) {
+      alerts.display(AlertsLevel.Info, m.ConfigScreen_DenoiserInProgress());
+      return;
+    }
 
     const saver: ImagesSaver = ZipArchiveWithFSImageSaver.isSupported
       ? new ZipArchiveWithFSImageSaver()

@@ -7,7 +7,7 @@
   import { onMount } from 'svelte';
   import { Analytics } from '$lib/Analytics';
   import LabeledSelect from '$lib/Components/LabeledSelect.svelte';
-  import { ConfigDetector, type ConfigState } from '$lib/ConfigState';
+  import { ConfigDenoiser, ConfigDetector, type ConfigState } from '$lib/ConfigState';
 
   type Props = {
     widths: Array<[number, string[]]>;
@@ -20,6 +20,8 @@
   let name = $state(`cropybara-${Math.round(Date.now() / 1000)}`);
   let limit = $state(20_000);
   let forceWidth = $state(false);
+
+  let denoiser: ConfigDenoiser = $state(ConfigDenoiser.Off);
 
   let detectors = [ConfigDetector.Manual, ConfigDetector.PixelComparison];
   let detectorType: ConfigDetector = $state(ConfigDetector.PixelComparison);
@@ -41,6 +43,7 @@
       step: pcDetectorStep,
       sensitivity: pcDetectorSensitivity,
       margins: pcDetectorMargin,
+      denoiser,
     });
   }
 
@@ -62,6 +65,23 @@
     <LabeledInput bind:value={limit} required type="number" min="1" max="65000"
       >{m.ConfigScreen_HeightLimit_Label()}</LabeledInput
     >
+
+    <LabeledSelect bind:value={denoiser}>
+      {#snippet label()}
+        {m.ConfigScreen_Denoiser_Select_Label()}
+      {/snippet}
+
+      {#snippet bottom()}
+        {#if denoiser === ConfigDenoiser.Unjpeg}
+          <small
+            ><span style="color: white">unjpeg</span> - {m.ConfigScreen_Denoiser_Select_Bottom_Unjpeg()}</small
+          >
+        {/if}
+      {/snippet}
+
+      <option value={ConfigDenoiser.Off}>{m.ConfigScreen_Denoiser_Select_Option_Off()}</option>
+      <option value={ConfigDenoiser.Unjpeg}>unjpeg ✨</option>
+    </LabeledSelect>
 
     <LabeledSelect bind:value={detectorType}>
       {#snippet label()}
@@ -147,5 +167,8 @@
     border: 1px solid rgba(255, 0, 0, 0.25);
     padding: 1em;
     border-radius: var(--input-border-radius);
+  }
+
+  small {
   }
 </style>

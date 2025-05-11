@@ -6,15 +6,21 @@
   type Props = {
     children: Snippet;
     label: Snippet;
+    bottom?: Snippet;
   } & HTMLSelectAttributes;
-  let { value = $bindable(), children, label, ...rest }: Props = $props();
+  let { value = $bindable(), children, label, bottom, ...rest }: Props = $props();
 </script>
 
 <label>
-  <span>{@render label()}:</span>
+  <span class="label">{@render label()}:</span>
   <Select bind:value {...rest}>
     {@render children()}
   </Select>
+  <span class="bottom">
+    {#if bottom}
+      {@render bottom()}
+    {/if}
+  </span>
 </label>
 
 <style lang="scss">
@@ -24,7 +30,12 @@
     user-select: none;
   }
 
-  span {
+  .label {
     padding-bottom: 0.3em;
+  }
+
+  .bottom {
+    line-height: 1em;
+    padding-top: 0.5em;
   }
 </style>

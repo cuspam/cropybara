@@ -1,6 +1,7 @@
 export interface ConfigStateCommon {
   name: string;
   limit: number;
+  denoiser: ConfigDenoiser;
 }
 
 export interface ConfigStateManualDetector {
@@ -17,6 +18,11 @@ export interface ConfigStatePixelComparisonDetector {
 export enum ConfigDetector {
   Manual = 'Manual',
   PixelComparison = 'PixelComparison',
+}
+
+export enum ConfigDenoiser {
+  Off = 'Off',
+  Unjpeg = 'Unjpeg',
 }
 
 export type ConfigState = ConfigStateCommon &

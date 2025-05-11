@@ -18,6 +18,7 @@
     "@eslint/compat": "^1.2.5",
     "@eslint/js": "^9.18.0",
     "@fontsource/pt-sans": "^5.2.5",
+    "@gradio/client": "^1.14.2",
     "@inlang/paraglide-js": "^2.0.12",
     "@neoconfetti/svelte": "^2.0.0",
     "@playwright/test": "^1.52.0",

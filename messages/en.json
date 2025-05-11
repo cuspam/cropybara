@@ -40,6 +40,11 @@
   "ConfigScreen_PCDetector_Sensitivity_Label": "Object detection sensitivity, %",
   "ConfigScreen_PCDetector_Step_Label": "Scan line step, px",
   "ConfigScreen_PCDetector_Margins_Label": "Ignorable horizontal margins, px",
+  "ConfigScreen_Denoiser_Select_Label": "Compression artifact removal",
+  "ConfigScreen_Denoiser_Select_Option_Off": "Don't use",
+  "ConfigScreen_Denoiser_Select_Bottom_Unjpeg": "cloud-based solution for removing image compression artifacts. During the alpha testing period, access is free and unlimited, but depending on the load, processing a chapter may take several minutes.",
   "EditorScreen_Title": "Cropybara — Editor",
+  "ConfigScreen_DenoiserError": "Failed to remove noise from {name}",
+  "ConfigScreen_DenoiserInProgress": "Denoiser is still processing images. Saving will become available as soon as it finishes.",
   "Done": "All images have been successfully sliced."
 }
