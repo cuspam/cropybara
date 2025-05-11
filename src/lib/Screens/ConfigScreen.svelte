@@ -8,6 +8,9 @@
   import { Analytics } from '$lib/Analytics';
   import LabeledSelect from '$lib/Components/LabeledSelect.svelte';
   import { ConfigDenoiser, ConfigDetector, type ConfigState } from '$lib/ConfigState';
+  import { OnlineState } from '$lib/States/OnlineState.svelte';
+  import { AlertsState } from '$lib/States/AlertsState.svelte';
+  import { AlertsLevel } from '$lib/States/AlertsState.svelte.js';
 
   type Props = {
     widths: Array<[number, string[]]>;
@@ -17,9 +20,13 @@
 
   const { onCancel, onSubmit, widths }: Props = $props();
   const progressBar = ProgressBarState.use();
+  const online = OnlineState.use();
+  const alerts = AlertsState.use();
   let name = $state(`cropybara-${Math.round(Date.now() / 1000)}`);
   let limit = $state(20_000);
   let forceWidth = $state(false);
+
+  $inspect(online.state);
 
   let denoiser: ConfigDenoiser = $state(ConfigDenoiser.Off);
 
@@ -36,6 +43,12 @@
 
   function handleSubmit(e: Event) {
     e.preventDefault();
+
+    if (denoiser !== ConfigDenoiser.Off && !online.state) {
+      alerts.display(AlertsLevel.Error, m.ConfigScreen_Denoiser_Alert_Offline());
+      return;
+    }
+
     onSubmit({
       name,
       limit,
@@ -80,7 +93,7 @@
       {/snippet}
 
       <option value={ConfigDenoiser.Off}>{m.ConfigScreen_Denoiser_Select_Option_Off()}</option>
-      <option value={ConfigDenoiser.Unjpeg}>unjpeg ✨</option>
+      <option value={ConfigDenoiser.Unjpeg} disabled={!online.state}>unjpeg ✨</option>
     </LabeledSelect>
 
     <LabeledSelect bind:value={detectorType}>

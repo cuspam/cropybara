@@ -46,5 +46,6 @@
   "EditorScreen_Title": "Cropybara — Редактор",
   "ConfigScreen_DenoiserError": "Не удалось убрать шумы с {name}",
   "ConfigScreen_DenoiserInProgress": "Денойзер еще обрабатывает изображения. Сохранение станет доступно, как только он закончит.",
+  "ConfigScreen_Denoiser_Alert_Offline": "Денойзеры не доступны в оффлайн режиме. Отключите денойзер или повторите запрос после появления сети.",
   "Done": "Все изображения успешно порезаны."
 }
