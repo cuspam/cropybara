@@ -23,7 +23,9 @@
   let cutsInit: number[] = $state([]);
   const progressBar = ProgressBarState.use();
   const alerts = AlertsState.use();
-  const denoiser = new UnjpegDenoiser('https://denoiser.cropybara.app/');
+  const denoiser = new UnjpegDenoiser(
+    localStorage.unjpegEndpoint ?? 'https://denoiser.cropybara.app/',
+  );
   let denoiserPromise: Promise<unknown> | null = $state(null);
 
   let widths = $derived(
