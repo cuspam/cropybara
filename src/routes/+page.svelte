@@ -17,6 +17,7 @@
   import { ConfigDenoiser, ConfigDetector, type ConfigState } from '$lib/ConfigState';
   import { PixelComparisonDetector } from '$lib/Detectors/PixelComparisonDetector';
   import { UnjpegDenoiser } from '$lib/Denoiser/UnjpegDenoiser';
+  import { browser } from '$app/environment';
 
   let images: ImageFile[] = $state([]);
   let config: ConfigState | null = $state(null);
@@ -24,7 +25,7 @@
   const progressBar = ProgressBarState.use();
   const alerts = AlertsState.use();
   const denoiser = new UnjpegDenoiser(
-    localStorage.unjpegEndpoint ?? 'https://denoiser.cropybara.app/',
+    (browser && localStorage.unjpegEndpoint) || 'https://denoiser.cropybara.app/',
   );
   let denoiserPromise: Promise<unknown> | null = $state(null);
 
