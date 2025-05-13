@@ -12,6 +12,9 @@ export default defineConfig({
       strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
     }),
   ],
+  build: {
+    sourcemap: true,
+  },
   worker: {
     format: 'es',
   },
