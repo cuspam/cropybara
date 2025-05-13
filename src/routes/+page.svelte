@@ -43,6 +43,7 @@
       .sort(([, a], [, b]) => b.length - a.length)
       .map(([k, v]) => [parseInt(k, 10), v] as [number, string[]]),
   );
+  let height = $derived(images.reduce((acc, image) => acc + image.height, 0));
 
   function handleCancel() {
     images = [];
@@ -172,7 +173,7 @@
 {#if images.length === 0}
   <UploadImagesScreen onImages={(i) => (images = i)} />
 {:else if !config}
-  <ConfigScreen {widths} onCancel={handleCancel} onSubmit={handleConfig} />
+  <ConfigScreen {widths} {height} onCancel={handleCancel} onSubmit={handleConfig} />
 {:else}
   <EditorScreen
     {images}

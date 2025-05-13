@@ -11,14 +11,16 @@
   import { OnlineState } from '$lib/States/OnlineState.svelte';
   import { AlertsState } from '$lib/States/AlertsState.svelte';
   import { AlertsLevel } from '$lib/States/AlertsState.svelte.js';
+  import { getLocale } from '$lib/paraglide/runtime';
 
   type Props = {
     widths: Array<[number, string[]]>;
+    height: number;
     onCancel: () => void;
     onSubmit: (options: ConfigState) => void;
   };
 
-  const { onCancel, onSubmit, widths }: Props = $props();
+  const { onCancel, onSubmit, widths, height }: Props = $props();
   const progressBar = ProgressBarState.use();
   const online = OnlineState.use();
   const alerts = AlertsState.use();
@@ -75,9 +77,15 @@
     <LabeledInput bind:value={name} required autofocus
       >{m.ConfigScreen_ProjectName_Label()}</LabeledInput
     >
-    <LabeledInput bind:value={limit} required type="number" min="1" max="65000"
-      >{m.ConfigScreen_HeightLimit_Label()}</LabeledInput
-    >
+    <LabeledInput bind:value={limit} required type="number" min="1" max="65000">
+      {#snippet bottom()}
+        {m.ConfigScreen_TotalSize()}
+        <span class="accent-info">{widths[0][0].toLocaleString(getLocale())}</span>
+        x
+        <span class="accent-info">{height.toLocaleString(getLocale())}</span> px
+      {/snippet}
+      {m.ConfigScreen_HeightLimit_Label()}
+    </LabeledInput>
 
     <LabeledSelect bind:value={denoiser}>
       {#snippet label()}
@@ -86,9 +94,7 @@
 
       {#snippet bottom()}
         {#if denoiser === ConfigDenoiser.Unjpeg}
-          <small
-            ><span style="color: white">unjpeg</span> - {m.ConfigScreen_Denoiser_Select_Bottom_Unjpeg()}</small
-          >
+          <span class="accent-info">unjpeg</span> - {m.ConfigScreen_Denoiser_Select_Bottom_Unjpeg()}
         {/if}
       {/snippet}
 
@@ -180,5 +186,9 @@
     border: 1px solid rgba(255, 0, 0, 0.25);
     padding: 1em;
     border-radius: var(--input-border-radius);
+  }
+
+  .accent-info {
+    color: var(--color-text-active);
   }
 </style>

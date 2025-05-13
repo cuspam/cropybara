@@ -47,5 +47,6 @@
   "ConfigScreen_DenoiserError": "Failed to remove noise from {name}",
   "ConfigScreen_DenoiserInProgress": "Denoiser is still processing images. Saving will become available as soon as it finishes.",
   "ConfigScreen_Denoiser_Alert_Offline": "Denoisers are not available in offline mode. Disable the denoiser or try again after the network connection is restored.",
+  "ConfigScreen_TotalSize": "Total size:",
   "Done": "All images have been successfully sliced."
 }
