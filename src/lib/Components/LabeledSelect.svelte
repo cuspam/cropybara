@@ -2,6 +2,7 @@
   import Select from '$lib/Components/Select.svelte';
   import type { HTMLSelectAttributes } from 'svelte/elements';
   import type { Snippet } from 'svelte';
+  import InputDescription from '$lib/Components/InputDescription.svelte';
 
   type Props = {
     children: Snippet;
@@ -16,11 +17,11 @@
   <Select bind:value {...rest}>
     {@render children()}
   </Select>
-  <span class="bottom">
-    {#if bottom}
+  {#if bottom}
+    <InputDescription>
       {@render bottom()}
-    {/if}
-  </span>
+    </InputDescription>
+  {/if}
 </label>
 
 <style lang="scss">
@@ -32,10 +33,5 @@
 
   .label {
     padding-bottom: 0.3em;
-  }
-
-  .bottom {
-    line-height: 1em;
-    padding-top: 0.5em;
   }
 </style>
