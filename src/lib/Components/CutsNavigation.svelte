@@ -27,7 +27,7 @@
     </svg>
   </button>
 
-  <div class="position">
+  <div>
     {current}&nbsp;/&nbsp;{total}
   </div>
 
@@ -46,69 +46,11 @@
   </button>
 </section>
 
-<style>
+<style lang="scss">
+  @use '../../style/mixins.scss';
+
   section {
-    position: fixed;
-    align-items: center;
-    justify-content: center;
-    left: 50%;
-    transform: translateX(-50%);
     bottom: 3rem;
-    display: flex;
-    z-index: 1000;
-    color: white;
-    border-radius: 0.5rem;
-    flex-wrap: nowrap;
-    user-select: none;
-    background: rgba(0, 0, 0, 0.5);
-
-    button:first-child {
-      border-top-left-radius: var(--input-border-radius);
-      border-bottom-left-radius: var(--input-border-radius);
-      border-right: none;
-    }
-
-    button:last-child {
-      border-top-right-radius: var(--input-border-radius);
-      border-bottom-right-radius: var(--input-border-radius);
-      border-left: none;
-    }
-  }
-
-  svg {
-    width: 1em;
-    height: 1em;
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    background: transparent;
-    color: white;
-    border: 2px solid var(--color-accent);
-  }
-
-  button:hover,
-  button:focus {
-    background: var(--color-accent);
-    outline: none;
-  }
-  button:active {
-    color: black;
-  }
-
-  .position {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1em;
-    height: 2.5rem;
-    border: 2px solid var(--color-accent);
-    border-left: 0;
-    border-right: 0;
-    box-sizing: border-box;
+    @include mixins.editor-control;
   }
 </style>
