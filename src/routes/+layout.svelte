@@ -9,7 +9,7 @@
   import * as env from '$env/static/public';
 
   onMount(() => {
-    if (browser && typeof env['PUBLIC_POSTHOG_KEY'] === 'string') {
+    if (browser && 'PUBLIC_POSTHOG_KEY' in env && typeof env['PUBLIC_POSTHOG_KEY'] === 'string') {
       posthog.init(env['PUBLIC_POSTHOG_KEY'], {
         api_host: 'https://eu.i.posthog.com',
         person_profiles: 'always',
