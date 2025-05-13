@@ -164,6 +164,9 @@
       console.debug(slicingMeasure.duration);
       alerts.display(AlertsLevel.Success, m.Done());
       Analytics.trackScreen('ResultScreen');
+    } catch (err) {
+      console.error(err);
+      alerts.display(AlertsLevel.Error, m.EditorScreen_SaverError());
     } finally {
       progressBar.remove(getter);
     }
