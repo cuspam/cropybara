@@ -12,7 +12,7 @@
 
 <style>
   img {
-    max-width: 100%;
+    width: 100%;
     height: auto;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
