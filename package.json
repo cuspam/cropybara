@@ -53,6 +53,7 @@
   "private": true,
   "type": "module",
   "trustedDependencies": [
-    "core-js"
+    "core-js",
+    "canvas"
   ]
 }
