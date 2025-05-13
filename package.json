@@ -37,6 +37,7 @@
     "globals": "^16.0.0",
     "jsdom": "^26.0.0",
     "jszip": "^3.10.1",
+    "posthog-js": "^1.240.6",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "sass-embedded": "^1.87.0",
@@ -50,5 +51,8 @@
     "vitest": "^3.0.0"
   },
   "private": true,
-  "type": "module"
+  "type": "module",
+  "trustedDependencies": [
+    "core-js"
+  ]
 }
