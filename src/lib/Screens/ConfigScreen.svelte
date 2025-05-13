@@ -181,7 +181,4 @@
     padding: 1em;
     border-radius: var(--input-border-radius);
   }
-
-  small {
-  }
 </style>
