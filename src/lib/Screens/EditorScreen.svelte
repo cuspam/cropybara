@@ -54,7 +54,7 @@
   }
 
   const currentCutIndex = $derived.by(() => {
-    if (zoom === 0 || windowHeight === 0) return 0;
+    if (zoom === 0 || windowHeight === 0 || cuts.cuts.length === 0) return 0;
     const pos = scrollY / zoom + windowHeight / (2 * zoom);
     return cuts.cuts.map((p, i) => [Math.abs(p - pos), i]).sort(([a], [b]) => a - b)[0][1];
   });
