@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import posthog from 'posthog-js';
+import posthog, { type Properties } from 'posthog-js';
 
 export class Analytics {
   public static trackScreen(name: string) {
@@ -20,6 +20,12 @@ export class Analytics {
 
       onFiles(files);
     };
+  }
+
+  public static trackConfig(config?: Properties) {
+    if (!browser) return;
+
+    posthog.capture('config', config);
   }
 
   protected static googleAnalytics<Command extends keyof Gtag.GtagCommands>(

@@ -51,7 +51,7 @@
       return;
     }
 
-    onSubmit({
+    const config = {
       name,
       limit,
       detector: detectorType,
@@ -59,7 +59,10 @@
       sensitivity: pcDetectorSensitivity,
       margins: pcDetectorMargin,
       denoiser,
-    });
+    } satisfies ConfigState;
+
+    Analytics.trackConfig(config);
+    onSubmit(config);
   }
 
   onMount(() => {
