@@ -20,6 +20,7 @@
   import { ImageFile } from '$lib/ImageFile';
   import WebShareTargetHandler from '$lib/Components/FilePicker/WebShareTargetHandler.svelte';
   import { browser } from '$app/environment';
+  import { Analytics } from '$lib/Analytics';
 
   const alerts = AlertsState.use();
   const progressBar = ProgressBarState.use();
@@ -151,13 +152,15 @@
   <h1>{m.Picker_LocalFilePicker_Header()}</h1>
 
   <div>
-    <ImagesPickerButton onFiles={handleFiles} />
-    <DirectoryPickerButton onFiles={handleFiles} />
-    <ZipArchivePickerButton onFiles={handleFiles} />
-    <ClipboardPasteButton onFiles={handleFiles} />
-    <ClipboardPasteHandler onFiles={handleFiles} />
-    <DragAndDropHandler onFiles={handleFiles} />
-    <WebShareTargetHandler onFiles={handleFiles} />
+    <ImagesPickerButton onFiles={Analytics.trackUpload('ImagesPickerButton', handleFiles)} />
+    <DirectoryPickerButton onFiles={Analytics.trackUpload('DirectoryPickerButton', handleFiles)} />
+    <ZipArchivePickerButton
+      onFiles={Analytics.trackUpload('ZipArchivePickerButton', handleFiles)}
+    />
+    <ClipboardPasteButton onFiles={Analytics.trackUpload('ClipboardPasteButton', handleFiles)} />
+    <ClipboardPasteHandler onFiles={Analytics.trackUpload('ClipboardPasteHandler', handleFiles)} />
+    <DragAndDropHandler onFiles={Analytics.trackUpload('DragAndDropHandler', handleFiles)} />
+    <WebShareTargetHandler onFiles={Analytics.trackUpload('WebShareTargetHandler', handleFiles)} />
   </div>
 </section>
 

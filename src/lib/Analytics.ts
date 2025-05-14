@@ -1,12 +1,25 @@
 import { browser } from '$app/environment';
+import posthog from 'posthog-js';
 
 export class Analytics {
   public static trackScreen(name: string) {
+    if (!browser) return;
+    posthog.capture('screen', { name });
     this.googleAnalytics('event', 'page_view', {
       page_title: name,
       page_path: `/${name}`,
       screen_name: name,
     });
+  }
+
+  public static trackUpload(source: string, onFiles: (files: File[]) => void) {
+    return (files: File[]) => {
+      if (browser) {
+        posthog.capture('upload', { source, files });
+      }
+
+      onFiles(files);
+    };
   }
 
   protected static googleAnalytics<Command extends keyof Gtag.GtagCommands>(
