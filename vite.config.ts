@@ -18,6 +18,9 @@ export default defineConfig({
   worker: {
     format: 'es',
   },
+  optimizeDeps: {
+    exclude: ['onnxruntime-web'],
+  },
   test: {
     workspace: [
       {

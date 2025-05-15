@@ -53,7 +53,15 @@
   "private": true,
   "type": "module",
   "trustedDependencies": [
+    "bufferutil",
+    "canvas",
     "core-js",
-    "canvas"
-  ]
+    "esbuild",
+    "msw",
+    "protobufjs",
+    "sharp"
+  ],
+  "dependencies": {
+    "onnxruntime-web": "^1.22.0"
+  }
 }
