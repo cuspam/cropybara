@@ -99,9 +99,16 @@
         {#if denoiser === ConfigDenoiser.Unjpeg}
           <span class="accent-info">unjpeg</span> - {m.ConfigScreen_Denoiser_Select_Bottom_Unjpeg()}
         {/if}
+
+        {#if denoiser.toLowerCase().endsWith('onnx')}
+          {m.ConfigScreen_Denoiser_Select_Bottom_ONNX()}
+        {/if}
       {/snippet}
 
       <option value={ConfigDenoiser.Off}>{m.ConfigScreen_Denoiser_Select_Option_Off()}</option>
+      <option value={ConfigDenoiser.ManhwaNullONNX}
+        >{m.ConfigScreen_Denoiser_Select_Option_ManhwaNullONNX()}</option
+      >
       <option value={ConfigDenoiser.Unjpeg} disabled={!online.state}>unjpeg ✨</option>
     </LabeledSelect>
 

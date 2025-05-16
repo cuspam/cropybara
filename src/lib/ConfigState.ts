@@ -22,6 +22,7 @@ export enum ConfigDetector {
 
 export enum ConfigDenoiser {
   Off = 'Off',
+  ManhwaNullONNX = 'ManhwaNullONNX',
   Unjpeg = 'Unjpeg',
 }
 

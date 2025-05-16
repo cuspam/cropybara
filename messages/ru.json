@@ -42,6 +42,8 @@
   "ConfigScreen_PCDetector_Margins_Label": "Игнорируемые отступы по горизонтали, px",
   "ConfigScreen_Denoiser_Select_Label": "Удаление артефактов сжатия",
   "ConfigScreen_Denoiser_Select_Option_Off": "Не использовать",
+  "ConfigScreen_Denoiser_Select_Option_ManhwaNullONNX": "Manhwa модель  от null",
+  "ConfigScreen_Denoiser_Select_Bottom_ONNX": "Данная модель выполняется в браузере, поэтому скорость и стабильность работы напрямую зависит от вашего устройства.",
   "ConfigScreen_Denoiser_Select_Bottom_Unjpeg": "облачное решение для удаления артефактов компрессии изображений. На время альфа-тестирования доступ бесплатен и не ограничен, но, в зависимости от нагрузки, на обработку главы может уйти несколько минут.",
   "EditorScreen_Title": "Cropybara — Редактор",
   "ConfigScreen_DenoiserError": "Не удалось убрать шумы с {name}",

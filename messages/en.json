@@ -42,6 +42,8 @@
   "ConfigScreen_PCDetector_Margins_Label": "Ignorable horizontal margins, px",
   "ConfigScreen_Denoiser_Select_Label": "Compression artifact removal",
   "ConfigScreen_Denoiser_Select_Option_Off": "Don't use",
+  "ConfigScreen_Denoiser_Select_Option_ManhwaNullONNX": "Manhwa model by null",
+  "ConfigScreen_Denoiser_Select_Bottom_ONNX": "This model runs in your browser, so its speed and stability depend directly on your device.",
   "ConfigScreen_Denoiser_Select_Bottom_Unjpeg": "cloud-based solution for removing image compression artifacts. During the alpha testing period, access is free and unlimited, but depending on the load, processing a chapter may take several minutes.",
   "EditorScreen_Title": "Cropybara — Editor",
   "ConfigScreen_DenoiserError": "Failed to remove noise from {name}",

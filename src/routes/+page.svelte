@@ -18,15 +18,13 @@
   import { PixelComparisonDetector } from '$lib/Detectors/PixelComparisonDetector';
   import { UnjpegDenoiser } from '$lib/Denoiser/UnjpegDenoiser';
   import { browser } from '$app/environment';
+  import type { Denoiser } from '$lib/Denoiser/Denoiser';
 
   let images: ImageFile[] = $state([]);
   let config: ConfigState | null = $state(null);
   let cutsInit: number[] = $state([]);
   const progressBar = ProgressBarState.use();
   const alerts = AlertsState.use();
-  const denoiser = new UnjpegDenoiser(
-    (browser && localStorage.unjpegEndpoint) || 'https://denoiser.cropybara.app/',
-  );
   let denoiserPromise: Promise<unknown> | null = $state(null);
 
   let widths = $derived(
@@ -78,9 +76,20 @@
       }
     }
 
-    console.log(cfg);
+    let denoiser: Denoiser | null = null;
 
     if (cfg.denoiser === ConfigDenoiser.Unjpeg) {
+      denoiser = new UnjpegDenoiser(
+        (browser && localStorage.unjpegEndpoint) || 'https://denoiser.cropybara.app/',
+      );
+    }
+
+    if (cfg.denoiser === ConfigDenoiser.ManhwaNullONNX) {
+      const { ONNXDenoiser } = await import('$lib/Denoiser/ONNXDenoiser');
+      denoiser = new ONNXDenoiser('/models/1x_manhwa_null/1x_manhwa_null.with_runtime_opt.ort');
+    }
+
+    if (denoiser) {
       const state = $state({ total: images.length, ready: 0 });
       const task = () => state;
       progressBar.add(task);
