@@ -98,6 +98,7 @@
           try {
             images[index] = await denoiser.process(image);
           } catch (err) {
+            console.error(`Failed to process image ${image.name}`, err);
             alerts.display(AlertsLevel.Error, m.ConfigScreen_DenoiserError({ name: image.name }));
           } finally {
             state.ready++;
