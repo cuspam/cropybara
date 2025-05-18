@@ -78,17 +78,25 @@ export class Patchify {
     // Helper function for 1D weight calculation (tent filter)
     // Weight is 1.0 at the center of the dimension, 0.0 at the edges.
     const get1DWeight = (localPosition: number, dimensionSize: number): number => {
-      if (dimensionSize === 1) return 1.0; // Single pixel line/column, full weight
+      if (dimensionSize <= 0) return 0.0; // Guard against invalid size
+      if (dimensionSize === 1) return 1.0; // Single pixel - full weight
 
+      // Center of the discrete index range [0, ..., dimensionSize-1]
       const center = (dimensionSize - 1) / 2.0;
-
-      // If dimensionSize is 1, center is 0. Avoid division by zero if somehow missed above.
-      if (center === 0) return 1.0;
-
       const distanceToCenter = Math.abs(localPosition - center);
-      // Weight is 1.0 when distanceToCenter is 0 (at center).
-      // Weight is 0.0 when distanceToCenter is 'center' (at edges).
-      const weight = 1.0 - distanceToCenter / center;
+
+      // Effective "half-width" for weight normalization.
+      // Using `dimensionSize / 2.0` (instead of `(dimensionSize - 1) / 2.0`) ensures non-zero weight at edges.
+      // Max `distanceToCenter` (at edges) is `(dimensionSize - 1) / 2.0`.
+      // `effectiveHalfWidth` (`dimensionSize / 2.0`) is thus slightly larger than max `distanceToCenter`
+      // for pixels within [0, dimensionSize-1] (if dimensionSize > 1).
+      // This ensures `distanceToCenter / effectiveHalfWidth < 1`, so `weight > 0` within the patch.
+      const effectiveHalfWidth = dimensionSize / 2.0;
+
+      // Weight becomes 0 only if `distanceToCenter == effectiveHalfWidth`, which would
+      // require `localPosition` to be outside the [0, dimensionSize-1] range.
+      const weight = 1.0 - distanceToCenter / effectiveHalfWidth;
+
       return Math.max(0.0, weight); // Clamp to avoid negative weights due to floating point inaccuracies
     };
 
