@@ -7,7 +7,12 @@
   import { onMount } from 'svelte';
   import { Analytics } from '$lib/Analytics';
   import LabeledSelect from '$lib/Components/LabeledSelect.svelte';
-  import { ConfigDenoiser, ConfigDetector, type ConfigState } from '$lib/ConfigState';
+  import {
+    ConfigDenoiser,
+    ConfigDetector,
+    type ConfigState,
+    ConfigUnwatermark,
+  } from '$lib/ConfigState';
   import { OnlineState } from '$lib/States/OnlineState.svelte';
   import { AlertsState } from '$lib/States/AlertsState.svelte';
   import { AlertsLevel } from '$lib/States/AlertsState.svelte.js';
@@ -27,6 +32,7 @@
   let name = $state(`cropybara-${Math.round(Date.now() / 1000)}`);
   let limit = $state(20_000);
   let forceWidth = $state(false);
+  let unwatermark = $state(ConfigUnwatermark.Off);
 
   $inspect(online.state);
 
@@ -59,6 +65,7 @@
       sensitivity: pcDetectorSensitivity,
       margins: pcDetectorMargin,
       denoiser,
+      unwatermark,
     } satisfies ConfigState;
 
     Analytics.trackConfig(config);
@@ -89,6 +96,18 @@
       {/snippet}
       {m.ConfigScreen_HeightLimit_Label()}
     </LabeledInput>
+
+    <LabeledSelect bind:value={unwatermark}>
+      {#snippet label()}
+        {m.ConfigScreen_Unwatermark_Select_Label()}
+      {/snippet}
+
+      <option value={ConfigUnwatermark.Off}>{m.ConfigScreen_Unwatermark_Select_Option_Off()}</option
+      >
+      {#if [1200].includes(widths[0][0])}
+        <option value={ConfigUnwatermark.ACQQ}>ac.qq.com</option>
+      {/if}
+    </LabeledSelect>
 
     <LabeledSelect bind:value={denoiser}>
       {#snippet label()}

@@ -2,6 +2,7 @@ export interface ConfigStateCommon {
   name: string;
   limit: number;
   denoiser: ConfigDenoiser;
+  unwatermark: ConfigUnwatermark;
 }
 
 export interface ConfigStateManualDetector {
@@ -24,6 +25,11 @@ export enum ConfigDenoiser {
   Off = 'Off',
   ManhwaNullONNX = 'ManhwaNullONNX',
   Unjpeg = 'Unjpeg',
+}
+
+export enum ConfigUnwatermark {
+  Off = 'Off',
+  ACQQ = 'ACQQ',
 }
 
 export type ConfigState = ConfigStateCommon &

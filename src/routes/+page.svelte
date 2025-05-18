@@ -1,6 +1,6 @@
 <script lang="ts">
   import UploadImagesScreen from '$lib/Screens/UploadImagesScreen.svelte';
-  import type { ImageFile } from '$lib/ImageFile';
+  import { ImageFile } from '$lib/ImageFile';
   import ConfigScreen from '$lib/Screens/ConfigScreen.svelte';
   import EditorScreen from '$lib/Screens/EditorScreen.svelte';
   import { AsyncImageResizer } from '$lib/ImageResizer/AsyncImageResizer';
@@ -14,11 +14,17 @@
   import { m } from '$lib/paraglide/messages.js';
   import { ZipArchiveWithFSImageSaver } from '$lib/ImageSaver/ZipArchiveWithFSImageSaver';
   import { Analytics } from '$lib/Analytics';
-  import { ConfigDenoiser, ConfigDetector, type ConfigState } from '$lib/ConfigState';
+  import {
+    ConfigDenoiser,
+    ConfigDetector,
+    type ConfigState,
+    ConfigUnwatermark,
+  } from '$lib/ConfigState';
   import { PixelComparisonDetector } from '$lib/Detectors/PixelComparisonDetector';
   import { UnjpegDenoiser } from '$lib/Denoiser/UnjpegDenoiser';
   import { browser } from '$app/environment';
   import type { Denoiser } from '$lib/Denoiser/Denoiser';
+  import { Unwatermarker } from '$lib/Denoiser/Unwatermarker';
 
   let images: ImageFile[] = $state([]);
   let config: ConfigState | null = $state(null);
@@ -74,6 +80,38 @@
       } finally {
         progressBar.remove(task);
       }
+    }
+
+    if (cfg.unwatermark === ConfigUnwatermark.ACQQ) {
+      const wmResponse = await fetch(`/watermarks/acqq-${widths[0][0]}.png`);
+      const blob = await wmResponse.blob();
+      const file = new File([blob], 'acqq-${widths[0][0]}.png', { type: 'image/png' });
+      const watermarkImage = await ImageFile.fromFile(file);
+      const unwatermark = new Unwatermarker({
+        watermark: watermarkImage,
+        left: -220,
+        top: -80,
+      });
+
+      const state = $state({ total: images.length, ready: 0 });
+      const task = () => state;
+      progressBar.add(task);
+
+      // Watermarks should be removed before processing by cut's detector
+      await Promise.all(
+        images.map(async (image, index) => {
+          try {
+            images[index] = await unwatermark.process(image);
+          } catch (err) {
+            console.error(`Failed to process image ${image.name}`, err);
+            alerts.display(AlertsLevel.Error, m.ConfigScreen_DenoiserError({ name: image.name }));
+          } finally {
+            state.ready++;
+          }
+        }),
+      ).finally(() => {
+        progressBar.remove(task);
+      });
     }
 
     let denoiser: Denoiser | null = null;
