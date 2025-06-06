@@ -40,7 +40,7 @@
     "posthog-js": "^1.240.6",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
-    "sass-embedded": "^1.87.0",
+    "sass": "^1.87.0",
     "sharp": "^0.34.1",
     "streamsaver": "^2.0.6",
     "svelte": "^5.25.0",
