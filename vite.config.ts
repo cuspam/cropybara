@@ -21,6 +21,9 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['onnxruntime-web'],
   },
+  ssr: {
+    timeout: 120000, // Increase SSR timeout to 2 minutes
+  },
   test: {
     workspace: [
       {
