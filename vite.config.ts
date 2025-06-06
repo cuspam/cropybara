@@ -12,6 +12,11 @@ export default defineConfig({
       strategy: ['localStorage', 'preferredLanguage', 'baseLocale'],
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {}
+    }
+  },
   build: {
     sourcemap: true,
   },
